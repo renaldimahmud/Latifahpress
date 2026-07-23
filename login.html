@@ -1,0 +1,655 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <base target="_top">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login - Perpustakaan STIE Latifah Mubarokiyah</title>
+    
+    <!-- Font Google -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    
+    <!-- Preload Gambar -->
+    <link rel="preload" href="https://lh3.googleusercontent.com/d/102L9NqOdjFgETx_400xkoNDSFWq2ewjm" as="image">
+    <link rel="preload" href="https://images.unsplash.com/photo-1448375240586-882707db888b?q=80&w=2070&auto=format&fit=crop" as="image">
+    
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        
+        body {
+            font-family: 'Poppins', sans-serif;
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            /* Background Hutan dari Unsplash */
+            background: url('https://images.unsplash.com/photo-1448375240586-882707db888b?q=80&w=2070&auto=format&fit=crop') no-repeat center center fixed;
+            background-size: cover;
+            position: relative;
+            overflow: hidden;
+            padding: 20px;
+        }
+        
+        /* Overlay gelap agar teks terbaca */
+        body::before {
+            content: '';
+            position: absolute;
+            inset: 0;
+            background: rgba(0, 0, 0, 0.4);
+            backdrop-filter: blur(2px);
+            z-index: 0;
+        }
+        
+        /* Efek partikel cahaya (opsional estetik) */
+        body::after {
+            content: '';
+            position: absolute;
+            inset: 0;
+            background: radial-gradient(circle at 20% 30%, rgba(59, 130, 246, 0.15), transparent 40%),
+                        radial-gradient(circle at 80% 70%, rgba(139, 92, 246, 0.15), transparent 40%);
+            z-index: 0;
+            pointer-events: none;
+        }
+        
+        /* ===== GLASSMORPHISM LOGIN BOX ===== */
+        .login-box {
+            position: relative;
+            z-index: 2;
+            width: 100%;
+            max-width: 340px; /* Diperkecil dari 400px */
+            background: rgba(15, 23, 42, 0.35); /* Biru gelap transparan */
+            backdrop-filter: blur(16px);
+            -webkit-backdrop-filter: blur(16px);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            border-radius: 20px;
+            padding: 32px 28px; /* Diperkecil dari 40px 35px */
+            box-shadow: 0 25px 50px rgba(0, 0, 0, 0.4);
+            color: white;
+        }
+        
+        .logo-container {
+            text-align: center;
+            margin-bottom: 15px; /* Diperkecil */
+            min-height: 70px; /* Diperkecil */
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+        }
+        
+        .logo-img {
+            width: 70px; /* Diperkecil dari 80px */
+            height: 70px; /* Diperkecil dari 80px */
+            object-fit: contain;
+            border-radius: 50%;
+            background: rgba(255, 255, 255, 0.8);
+            padding: 4px;
+            box-shadow: 0 4px 15px rgba(59, 130, 246, 0.3);
+            opacity: 0;
+            transition: opacity 0.5s ease;
+        }
+        
+        .logo-img.loaded { opacity: 1; }
+        
+        .logo-placeholder {
+            font-size: 36px; /* Diperkecil */
+            animation: pulse 1.5s infinite;
+        }
+        
+        @keyframes pulse {
+            0%, 100% { opacity: 0.7; transform: scale(1); }
+            50% { opacity: 1; transform: scale(1.1); }
+        }
+        
+        h1 {
+            text-align: center;
+            font-size: 22px; /* Diperkecil dari 24px */
+            font-weight: 600;
+            margin-bottom: 4px;
+            letter-spacing: -0.5px;
+            text-shadow: 0 2px 4px rgba(0,0,0,0.2);
+        }
+        
+        .subtitle {
+            text-align: center;
+            font-size: 12px; /* Diperkecil dari 13px */
+            font-weight: 300;
+            margin-bottom: 20px; /* Diperkecil */
+            opacity: 0.9;
+        }
+        
+        .clock-container {
+            background: rgba(255, 255, 255, 0.1);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 12px;
+            padding: 10px; /* Diperkecil */
+            margin-bottom: 20px; /* Diperkecil */
+            text-align: center;
+        }
+        
+        .digital-clock {
+            font-family: 'Courier New', monospace;
+            font-size: 24px; /* Diperkecil dari 28px */
+            font-weight: 700;
+            color: #93c5fd;
+            text-shadow: 0 0 15px rgba(147, 197, 253, 0.5);
+            letter-spacing: 2px;
+        }
+        
+        .clock-seconds { font-size: 12px; color: #bfdbfe; } /* Diperkecil */
+        
+        .clock-date {
+            font-size: 10px; /* Diperkecil dari 11px */
+            color: rgba(255,255,255,0.7);
+            margin-top: 4px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            font-weight: 500;
+        }
+        
+        .error-msg {
+            background: rgba(239, 68, 68, 0.2);
+            border: 1px solid rgba(239, 68, 68, 0.4);
+            color: #fecaca;
+            padding: 10px 14px; /* Diperkecil */
+            border-radius: 8px;
+            margin-bottom: 16px; /* Diperkecil */
+            display: none;
+            font-size: 12px; /* Diperkecil dari 13px */
+            font-weight: 500;
+            text-align: center;
+            animation: slideDown 0.3s ease;
+        }
+        
+        @keyframes slideDown {
+            from { opacity: 0; transform: translateY(-10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        
+        .error-msg.show { display: block; }
+        .error-msg.shake { animation: shake 0.4s; }
+        
+        @keyframes shake {
+            0%, 100% { transform: translateX(0); }
+            25% { transform: translateX(-8px); }
+            75% { transform: translateX(8px); }
+        }
+        
+        .form-group { margin-bottom: 16px; position: relative; } /* Diperkecil dari 20px */
+        
+        .input-icon {
+            position: absolute;
+            left: 14px; /* Diperkecil */
+            top: 50%;
+            transform: translateY(-50%);
+            font-size: 14px; /* Diperkecil */
+            opacity: 0.7;
+            z-index: 2;
+        }
+        
+        .form-input {
+            width: 100%;
+            padding: 12px 14px 12px 40px; /* Diperkecil */
+            background: rgba(255, 255, 255, 0.1);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            border-radius: 10px; /* Diperkecil dari 12px */
+            font-size: 13px; /* Diperkecil dari 14px */
+            font-family: 'Poppins', sans-serif;
+            color: white;
+            outline: none;
+            transition: all 0.3s ease;
+        }
+        
+        .form-input::placeholder { color: rgba(255,255,255,0.6); }
+        
+        .form-input:focus {
+            background: rgba(255, 255, 255, 0.15);
+            border-color: #93c5fd;
+            box-shadow: 0 0 0 3px rgba(147, 197, 253, 0.1);
+        }
+        
+        .btn-login {
+            width: 100%;
+            padding: 12px; /* Diperkecil */
+            background: white;
+            color: #0f172a;
+            border: none;
+            border-radius: 10px; /* Diperkecil */
+            font-size: 14px; /* Diperkecil */
+            font-weight: 700;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            margin-top: 6px;
+            box-shadow: 0 4px 15px rgba(255, 255, 255, 0.2);
+            font-family: 'Poppins', sans-serif;
+        }
+        
+        .btn-login:hover {
+            background: #dbeafe;
+            transform: translateY(-2px);
+            box-shadow: 0 8px 20px rgba(255, 255, 255, 0.3);
+        }
+        
+        .btn-login:disabled { opacity: 0.7; cursor: not-allowed; transform: none; }
+        
+        .spinner {
+            display: inline-block;
+            width: 14px; /* Diperkecil */
+            height: 14px; /* Diperkecil */
+            border: 2px solid rgba(0,0,0,0.2);
+            border-top-color: #0f172a;
+            border-radius: 50%;
+            animation: spin 0.6s linear infinite;
+            vertical-align: middle;
+            margin-right: 6px;
+        }
+        
+        @keyframes spin { to { transform: rotate(360deg); } }
+        
+        .footer {
+            text-align: center;
+            margin-top: 20px; /* Diperkecil */
+            padding-top: 15px; /* Diperkecil */
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
+            font-size: 10px; /* Diperkecil */
+            color: rgba(255, 255, 255, 0.5);
+        }
+        
+        .footer span { color: rgba(255, 255, 255, 0.8); font-weight: 600; }
+        
+        /* ===== TOMBOL BANTUAN FLOATING (ESTETIK) ===== */
+        .help-float-btn {
+            position: fixed;
+            top: 24px;
+            right: 24px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            padding: 8px 16px 8px 10px;
+            background: rgba(255, 255, 255, 0.15);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            border: 1px solid rgba(255, 255, 255, 0.25);
+            border-radius: 50px; /* Bentuk Kapsul */
+            color: white;
+            cursor: pointer;
+            font-family: 'Poppins', sans-serif;
+            font-size: 13px;
+            font-weight: 500;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+            z-index: 1000;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        .help-float-btn:hover {
+            background: rgba(255, 255, 255, 0.25);
+            transform: translateY(-2px) scale(1.02);
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.2);
+            border-color: rgba(255, 255, 255, 0.4);
+        }
+
+        .help-float-btn .wa-icon {
+            width: 28px;
+            height: 28px;
+            background: linear-gradient(135deg, #25D366, #128C7E);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-shrink: 0;
+            box-shadow: 0 2px 8px rgba(37, 211, 102, 0.4);
+            transition: transform 0.3s ease;
+        }
+
+        .help-float-btn:hover .wa-icon {
+            transform: rotate(10deg);
+        }
+
+        .help-float-btn svg {
+            width: 16px;
+            height: 16px;
+            fill: white;
+        }
+        
+        /* ===== POPUP MODAL WHATSAPP ===== */
+        .popup-overlay {
+            position: fixed;
+            inset: 0;
+            background: rgba(0,0,0,0.6);
+            backdrop-filter: blur(8px);
+            z-index: 2000;
+            display: none;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+        }
+        
+        .popup-overlay.active { display: flex; }
+        
+        .popup-modal {
+            background: white;
+            border-radius: 20px;
+            max-width: 380px;
+            width: 100%;
+            overflow: hidden;
+            box-shadow: 0 20px 50px rgba(0,0,0,0.3);
+            animation: popIn 0.3s ease;
+        }
+        
+        @keyframes popIn {
+            from { transform: scale(0.9); opacity: 0; }
+            to { transform: scale(1); opacity: 1; }
+        }
+        
+        .popup-header {
+            background: linear-gradient(135deg, #0f172a, #1e3a5f);
+            padding: 24px;
+            text-align: center;
+            color: white;
+            position: relative;
+        }
+        
+        .popup-close {
+            position: absolute;
+            top: 15px;
+            right: 15px;
+            background: rgba(255,255,255,0.15);
+            border: none;
+            color: white;
+            width: 30px;
+            height: 30px;
+            border-radius: 50%;
+            cursor: pointer;
+            font-size: 16px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: background 0.2s;
+        }
+        
+        .popup-close:hover { background: rgba(255,255,255,0.3); }
+        
+        .profile-photo {
+            width: 70px;
+            height: 70px;
+            border-radius: 50%;
+            margin: 0 auto 12px;
+            border: 3px solid rgba(255,255,255,0.2);
+            overflow: hidden;
+            background: #1e293b;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        
+        .profile-photo img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            opacity: 0;
+            transition: opacity 0.3s;
+        }
+        
+        .profile-photo img.loaded { opacity: 1; }
+        
+        .photo-placeholder { font-size: 30px; }
+        
+        .popup-body { padding: 24px; }
+        
+        .info-item {
+            background: #f8fafc;
+            padding: 12px 16px;
+            border-radius: 10px;
+            margin-bottom: 10px;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+        
+        .info-icon {
+            width: 36px;
+            height: 36px;
+            background: #e0f2fe;
+            color: #0284c7;
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 16px;
+            flex-shrink: 0;
+        }
+        
+        .info-text .label { font-size: 11px; color: #64748b; text-transform: uppercase; font-weight: 600; }
+        .info-text .value { font-size: 14px; color: #0f172a; font-weight: 600; }
+        .info-text .value a { color: #0f172a; text-decoration: none; }
+        
+        .btn-wa {
+            width: 100%;
+            margin-top: 10px;
+            padding: 14px;
+            background: #25D366;
+            color: white;
+            border: none;
+            border-radius: 12px;
+            font-weight: 700;
+            cursor: pointer;
+            font-size: 15px;
+            transition: all 0.2s;
+            font-family: 'Poppins', sans-serif;
+        }
+        
+        .btn-wa:hover { background: #1da851; transform: translateY(-1px); }
+        
+        @media (max-width: 480px) {
+            .login-box { padding: 28px 22px; }
+            /* Di layar kecil, sembunyikan teks agar hanya ikon WA yang muncul */
+            .help-float-btn { padding: 8px; top: 15px; right: 15px; }
+            .help-float-btn .btn-text { display: none; }
+        }
+    </style>
+</head>
+<body>
+
+<!-- Tombol Bantuan Estetik -->
+<button class="help-float-btn" id="helpFloatBtn" title="Hubungi Koordinator">
+    <span class="wa-icon">
+        <svg viewBox="0 0 24 24">
+            <path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.247-.694.247-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413Z"/>
+        </svg>
+    </span>
+    <span class="btn-text">Bantuan</span>
+</button>
+
+<!-- Popup Bantuan -->
+<div class="popup-overlay" id="popupOverlay">
+    <div class="popup-modal">
+        <div class="popup-header">
+            <button class="popup-close" onclick="closePopup()">&times;</button>
+            <div class="profile-photo" id="profilePhoto">
+                <img src="https://drive.google.com/thumbnail?id=1mFVM3H4AY8OZfHCSqzzAqPAbgRqSCDqM&sz=w400" 
+                     alt="Koordinator" 
+                     id="profileImg"
+                     onload="this.classList.add('loaded')"
+                     onerror="handleProfileError()">
+                <span class="photo-placeholder" id="photoPlaceholder">👤</span>
+            </div>
+            <h3 style="margin-bottom: 4px;">Drs. Ujang Mulyanto, M.M.</h3>
+            <p style="font-size: 12px; opacity: 0.8;">Koordinator UPT Perpustakaan</p>
+        </div>
+        <div class="popup-body">
+            <div class="info-item">
+                <div class="info-icon">💬</div>
+                <div class="info-text">
+                    <div class="label">WhatsApp</div>
+                    <div class="value"><a href="https://wa.me/6282115245732" target="_blank">0821 1524 5732</a></div>
+                </div>
+            </div>
+            <div class="info-item">
+                <div class="info-icon">📧</div>
+                <div class="info-text">
+                    <div class="label">Email</div>
+                    <div class="value"><a href="mailto:ujangmulyanto99@gmail.com">ujangmulyanto99@gmail.com</a></div>
+                </div>
+            </div>
+            <button class="btn-wa" id="waPopupBtn">💬 Hubungi via WhatsApp</button>
+        </div>
+    </div>
+</div>
+
+<!-- Login Box -->
+<div class="login-box">
+    <div class="logo-container">
+        <img src="https://drive.google.com/thumbnail?id=102L9NqOdjFgETx_400xkoNDSFWq2ewjm&sz=w500" 
+             alt="Logo STIE LM" 
+             class="logo-img" 
+             id="logoImg"
+             onload="this.classList.add('loaded')"
+             onerror="handleLogoError()">
+        <div class="logo-placeholder" id="logoPlaceholder" style="display:none;">📚</div>
+    </div>
+    
+    <h1>Selamat Datang</h1>
+    <p class="subtitle">Sistem Informasi Perpustakaan STIE LM</p>
+    
+    <div class="clock-container">
+        <div class="digital-clock" id="digitalClock">00:00<span class="clock-seconds">00</span></div>
+        <div class="clock-date" id="clockDate">Loading...</div>
+    </div>
+    
+    <div id="errorMsg" class="error-msg">⚠️ <span id="errorText">Login gagal!</span></div>
+    
+    <!-- PERBAIKAN BUG: action="javascript:void(0)" mencegah double submit -->
+    <form id="loginForm" action="javascript:void(0)">
+        <div class="form-group">
+            <span class="input-icon">👤</span>
+            <input type="text" class="form-input" id="username" placeholder="Username" required autofocus>
+        </div>
+        
+        <div class="form-group">
+            <span class="input-icon">🔒</span>
+            <input type="password" class="form-input" id="password" placeholder="Password" required>
+        </div>
+        
+        <button type="submit" class="btn-login" id="btnLogin">Masuk</button>
+    </form>
+    
+    <div class="footer">
+        © 2026 <span>UPT Perpustakaan STIE Latifah Mubarokiyah</span>
+    </div>
+</div>
+
+<script>
+var SCRIPT_URL = "<?= scriptUrl ?>";
+
+// =========================================================
+// HANDLER ERROR GAMBAR
+// =========================================================
+function handleLogoError() {
+    var img = document.getElementById('logoImg');
+    var placeholder = document.getElementById('logoPlaceholder');
+    img.style.display = 'none';
+    placeholder.style.display = 'block';
+}
+
+function handleProfileError() {
+    var img = document.getElementById('profileImg');
+    var placeholder = document.getElementById('photoPlaceholder');
+    img.style.display = 'none';
+    placeholder.style.display = 'block';
+}
+
+// =========================================================
+// JAM DIGITAL
+// =========================================================
+function updateClock() {
+    var now = new Date();
+    var h = String(now.getHours()).padStart(2, '0');
+    var m = String(now.getMinutes()).padStart(2, '0');
+    var s = String(now.getSeconds()).padStart(2, '0');
+    
+    document.getElementById('digitalClock').innerHTML = h + ':' + m + '<span class="clock-seconds">' + s + '</span>';
+    
+    var days = ['Minggu', 'Senin', 'Selasa', 'Rabu', 'Kamis', 'Jumat', 'Sabtu'];
+    var months = ['Januari', 'Februari', 'Maret', 'April', 'Mei', 'Juni', 'Juli', 'Agustus', 'September', 'Oktober', 'November', 'Desember'];
+    
+    document.getElementById('clockDate').textContent = days[now.getDay()] + ', ' + now.getDate() + ' ' + months[now.getMonth()] + ' ' + now.getFullYear();
+}
+setInterval(updateClock, 1000);
+updateClock();
+
+// =========================================================
+// POPUP BANTUAN
+// =========================================================
+var popupOverlay = document.getElementById('popupOverlay');
+document.getElementById('helpFloatBtn').addEventListener('click', () => {
+    popupOverlay.classList.add('active');
+});
+function closePopup() { popupOverlay.classList.remove('active'); }
+popupOverlay.addEventListener('click', (e) => { if(e.target === popupOverlay) closePopup(); });
+
+document.getElementById('waPopupBtn').addEventListener('click', function() {
+    var username = document.getElementById('username').value.trim();
+    var msg = 'Assalamualaikum Pak Ujang, saya mengalami kesulitan login perpustakaan.';
+    if (username) msg += ' Username saya: ' + username + '.'; 
+    else msg += ' Saya lupa username saya.';
+    msg += ' Mohon bantuannya. Terima kasih.';
+    window.open('https://wa.me/6282115245732?text=' + encodeURIComponent(msg), '_blank');
+    closePopup();
+});
+
+// =========================================================
+// LOGIN FORM (PERBAIKAN BUG)
+// =========================================================
+document.getElementById('loginForm').addEventListener('submit', function(e) {
+    e.preventDefault(); // Cegah reload halaman default
+    
+    var username = document.getElementById('username').value.trim();
+    var password = document.getElementById('password').value.trim();
+    var btn = document.getElementById('btnLogin');
+    var errorDiv = document.getElementById('errorMsg');
+    var errorText = document.getElementById('errorText');
+    
+    if (!username || !password) {
+        errorText.textContent = 'Username dan password harus diisi!';
+        errorDiv.classList.add('show');
+        return;
+    }
+    
+    btn.disabled = true;
+    btn.innerHTML = '<span class="spinner"></span> Memproses...';
+    errorDiv.classList.remove('show');
+    
+    google.script.run
+        .withSuccessHandler(function(result) {
+            btn.disabled = false;
+            btn.innerHTML = 'Masuk';
+            
+            if (result.success && result.token) {
+                localStorage.setItem('sessionToken', result.token);
+                // PERBAIKAN BUG: replace() agar tombol back browser tidak kembali ke login
+                window.top.location.replace(SCRIPT_URL + '?token=' + encodeURIComponent(result.token));
+            } else {
+                // PERBAIKAN BUG: else ditambahkan agar tidak terus redirect
+                errorText.textContent = result.message || 'Username atau password salah!';
+                errorDiv.classList.add('show');
+                document.getElementById('password').value = '';
+                document.getElementById('password').focus();
+            }
+        })
+        .withFailureHandler(function(err) {
+            btn.disabled = false;
+            btn.innerHTML = 'Masuk';
+            errorText.textContent = 'Error sistem: ' + err.message;
+            errorDiv.classList.add('show');
+        })
+        .verifyLogin(username, password);
+});
+
+// Auto focus
+window.onload = function() { document.getElementById('username').focus(); };
+</script>
+
+</body>
+</html>
