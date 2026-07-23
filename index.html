@@ -1,59 +1,2052 @@
 <!DOCTYPE html>
-<html>
-  <head>
+<html lang="id">
+<head>
+    <base target="_top">
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Ruang Baca Digital - STIE LM</title>
+    <title>Ruang Baca Digital - STIE Latifah Mubarokiyah</title>
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     <style>
-      * {
-        margin: 0;
-        padding: 0;
-        box-sizing: border-box;
-      }
-      
-      html, body {
-        width: 100%;
-        height: 100%;
-        overflow: hidden;
-        background: #f0f4f8;
-      }
-      
-      iframe {
-        display: block;
-        width: 100vw;
-        height: 100vh;
-        border: none;
-        overflow: auto;
-      }
-      
-      .loading {
-        display: flex;
-        justify-content: center;
-        align-items: center;
-        height: 100vh;
-        font-family: Arial, sans-serif;
-        color: #0b4e96;
-        font-size: 18px;
-      }
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+        
+        body {
+            font-family: 'Plus Jakarta Sans', sans-serif;
+            min-height: 100vh;
+            color: #0f172a;
+            position: relative;
+            overflow-x: hidden;
+            background: url('https://images.unsplash.com/photo-1448375240586-882707db888b?q=80&w=2070&auto=format&fit=crop') no-repeat center center fixed;
+            background-size: cover;
+        }
+
+        body::before {
+            content: '';
+            position: fixed;
+            inset: 0;
+            background: linear-gradient(135deg, rgba(15, 23, 42, 0.82) 0%, rgba(30, 41, 59, 0.75) 50%, rgba(15, 23, 42, 0.85) 100%);
+            backdrop-filter: blur(2px);
+            z-index: -2;
+            pointer-events: none;
+        }
+
+        body::after {
+            content: '';
+            position: fixed;
+            inset: 0;
+            background:
+                radial-gradient(circle at 15% 25%, rgba(59, 130, 246, 0.18), transparent 45%),
+                radial-gradient(circle at 85% 20%, rgba(167, 139, 250, 0.15), transparent 45%),
+                radial-gradient(circle at 75% 80%, rgba(236, 72, 153, 0.12), transparent 45%),
+                radial-gradient(circle at 20% 85%, rgba(16, 185, 129, 0.12), transparent 45%);
+            z-index: -1;
+            pointer-events: none;
+            animation: auroraShift 20s ease-in-out infinite;
+        }
+
+        @keyframes auroraShift {
+            0%, 100% { opacity: 1; transform: scale(1); }
+            50% { opacity: 0.85; transform: scale(1.05); }
+        }
+
+        .header-sticky { position: sticky; top: 0; z-index: 100; }
+
+        .header-gradient {
+            background: rgba(15, 23, 42, 0.75);
+            backdrop-filter: blur(20px) saturate(180%);
+            -webkit-backdrop-filter: blur(20px) saturate(180%);
+            border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.2);
+            position: relative;
+            padding: 16px 0;
+        }
+
+        .header-gradient::before {
+            content: '';
+            position: absolute;
+            inset: 0;
+            background: 
+                radial-gradient(circle at 15% 50%, rgba(59, 130, 246, 0.15), transparent 50%),
+                radial-gradient(circle at 85% 50%, rgba(167, 139, 250, 0.12), transparent 50%);
+            pointer-events: none;
+        }
+
+        .header-inner {
+            display: flex; align-items: center; justify-content: space-between;
+            gap: 16px; max-width: 1280px; margin: 0 auto; padding: 0 20px;
+            position: relative; z-index: 2;
+        }
+
+        .header-left { display: flex; align-items: center; gap: 14px; flex-shrink: 0; }
+
+        .logo-icon-wrapper {
+            width: 52px; height: 52px;
+            border-radius: 14px;
+            display: flex; align-items: center; justify-content: center;
+            flex-shrink: 0; overflow: hidden;
+            box-shadow: 0 4px 16px rgba(59, 130, 246, 0.2);
+            transition: all 0.3s ease;
+            border: 2px solid rgba(255, 255, 255, 0.1);
+        }
+        .logo-icon-wrapper:hover { transform: scale(1.05); border-color: rgba(59, 130, 246, 0.4); }
+        .logo-icon-wrapper img { width: 100%; height: 100%; object-fit: cover; }
+
+        .header-title-group { display: flex; flex-direction: column; }
+        .header-title { font-size: 1.4rem; font-weight: 800; letter-spacing: -0.02em; line-height: 1.2; }
+        .gradient-text {
+            background: linear-gradient(135deg, #ffffff 0%, #93c5fd 50%, #c4b5fd 100%);
+            -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text;
+        }
+
+        .header-subtitle { font-size: 10px; font-weight: 600; letter-spacing: 0.15em; text-transform: uppercase; color: rgba(148, 163, 184, 0.8); margin-top: 1px; }
+        .header-credit { font-size: 9px; font-weight: 500; color: rgba(148, 163, 184, 0.5); letter-spacing: 0.02em; }
+        .header-credit span { color: rgba(191, 219, 254, 0.7); font-weight: 600; }
+
+        .header-center {
+            flex: 1;
+            display: flex;
+            justify-content: center;
+            padding: 0 16px;
+            max-width: 500px;
+            margin: 0 auto;
+        }
+
+        .header-search-bar {
+            width: 100%;
+            background: rgba(255, 255, 255, 0.85);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            border-radius: 40px;
+            padding: 4px 4px 4px 18px;
+            border: 1px solid rgba(255, 255, 255, 0.3);
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+        }
+        .header-search-bar:focus-within {
+            border-color: #3b82f6;
+            box-shadow: 0 0 0 3px rgba(59,130,246,0.15), 0 4px 20px rgba(0, 0, 0, 0.08);
+            background: rgba(255, 255, 255, 0.95);
+        }
+        .header-search-bar input {
+            flex: 1;
+            border: none;
+            outline: none;
+            padding: 7px 0;
+            font-size: 0.8rem;
+            background: transparent;
+            font-family: 'Plus Jakarta Sans', sans-serif;
+            color: #0f172a;
+            min-width: 0;
+        }
+        .header-search-bar input::placeholder { color: #94a3b8; font-weight: 400; }
+        .header-search-bar .search-icon { color: #94a3b8; font-size: 0.85rem; margin-right: 6px; flex-shrink: 0; }
+        .header-search-bar .clear-btn {
+            background: #f1f5f9;
+            border: none;
+            border-radius: 30px;
+            padding: 5px 12px;
+            font-size: 0.65rem;
+            font-weight: 700;
+            color: #64748b;
+            cursor: pointer;
+            transition: all 0.2s;
+            flex-shrink: 0;
+            letter-spacing: 0.02em;
+        }
+        .header-search-bar .clear-btn:hover { background: #e2e8f0; color: #0f172a; }
+
+        .header-right { display: flex; align-items: center; gap: 8px; flex-shrink: 0; }
+
+        .count-badge {
+            background: linear-gradient(135deg, rgba(59, 130, 246, 0.15), rgba(167, 139, 250, 0.15));
+            border: 1px solid rgba(96, 165, 250, 0.25); padding: 6px 12px; border-radius: 40px;
+            font-size: 11px; font-weight: 700; color: #bfdbfe;
+            display: inline-flex; align-items: center; gap: 6px; white-space: nowrap;
+        }
+        .count-badge .badge-dot { width: 5px; height: 5px; border-radius: 50%; background: #60a5fa; box-shadow: 0 0 8px #60a5fa; animation: pulseDot 2s infinite; }
+        @keyframes pulseDot { 0%, 100% { opacity: 1; } 50% { opacity: 0.4; } }
+
+        .header-btn {
+            display: inline-flex; align-items: center; justify-content: center; gap: 5px;
+            padding: 7px 14px; border-radius: 40px; font-size: 11px; font-weight: 700; cursor: pointer;
+            transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1); font-family: 'Plus Jakarta Sans', sans-serif;
+            border: 1px solid rgba(255, 255, 255, 0.1); white-space: nowrap; letter-spacing: 0.01em;
+            background: rgba(255, 255, 255, 0.06); color: rgba(255, 255, 255, 0.9);
+            backdrop-filter: blur(4px); -webkit-backdrop-filter: blur(4px);
+        }
+        .header-btn .btn-icon { font-size: 13px; line-height: 1; }
+
+        .header-btn-tools {
+            background: linear-gradient(135deg, rgba(59, 130, 246, 0.3), rgba(167, 139, 250, 0.3));
+            border-color: rgba(255, 255, 255, 0.15); box-shadow: 0 4px 14px rgba(59, 130, 246, 0.2);
+        }
+        .header-btn-tools:hover {
+            transform: translateY(-2px); box-shadow: 0 8px 25px rgba(59, 130, 246, 0.4);
+            background: linear-gradient(135deg, rgba(59, 130, 246, 0.5), rgba(167, 139, 250, 0.5));
+            border-color: rgba(255, 255, 255, 0.3);
+        }
+
+        .header-btn-admin { background: rgba(255, 255, 255, 0.05); border-color: rgba(255, 255, 255, 0.08); }
+        .header-btn-admin:hover { background: rgba(255, 255, 255, 0.12); border-color: rgba(255, 255, 255, 0.2); transform: translateY(-2px); }
+
+        .header-btn-logout { background: rgba(239, 68, 68, 0.08); border-color: rgba(239, 68, 68, 0.15); color: rgba(252, 165, 165, 0.9); }
+        .header-btn-logout:hover { background: rgba(239, 68, 68, 0.2); border-color: rgba(239, 68, 68, 0.3); transform: translateY(-2px); }
+
+        .header-divider { width: 1px; height: 24px; background: linear-gradient(to bottom, transparent, rgba(255,255,255,0.1), transparent); margin: 0 2px; }
+
+        .top-bar {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            max-width: 1280px;
+            margin: 8px auto 0 auto;
+            padding: 0 20px 6px 20px;
+            gap: 12px;
+            flex-wrap: wrap;
+        }
+
+        .tab-switcher {
+            display: flex; gap: 6px;
+            background: rgba(255, 255, 255, 0.06);
+            border-radius: 40px; padding: 4px;
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            backdrop-filter: blur(8px);
+            flex-wrap: wrap;
+        }
+
+        .tab-switcher .tab-btn {
+            padding: 8px 18px; border-radius: 30px; border: none;
+            font-family: 'Plus Jakarta Sans', sans-serif;
+            font-weight: 700; font-size: 11px; cursor: pointer;
+            transition: all 0.3s ease;
+            background: transparent;
+            color: rgba(255, 255, 255, 0.6);
+            letter-spacing: 0.02em;
+        }
+        .tab-switcher .tab-btn:hover {
+            color: rgba(255, 255, 255, 0.9);
+            background: rgba(255, 255, 255, 0.05);
+        }
+        .tab-switcher .tab-btn.active {
+            background: linear-gradient(135deg, rgba(59, 130, 246, 0.3), rgba(167, 139, 250, 0.3));
+            color: white;
+            box-shadow: 0 4px 12px rgba(59, 130, 246, 0.15);
+        }
+        .tab-switcher .tab-btn .badge {
+            background: rgba(59, 130, 246, 0.3);
+            padding: 1px 8px; border-radius: 20px;
+            font-size: 9px; margin-left: 4px; color: #93c5fd;
+        }
+
+        .clock-modern {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            background: rgba(15, 23, 42, 0.6);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            border-radius: 40px;
+            padding: 4px 18px 4px 12px;
+            flex-shrink: 0;
+            position: relative;
+            border: 2px solid transparent;
+            background-clip: padding-box;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.2);
+        }
+        .clock-modern::before {
+            content: '';
+            position: absolute;
+            inset: -2px;
+            border-radius: 40px;
+            padding: 2px;
+            background: linear-gradient(135deg, #3b82f6, #8b5cf6, #ec4899, #f59e0b, #10b981, #3b82f6);
+            background-size: 300% 300%;
+            -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+            -webkit-mask-composite: xor;
+            mask-composite: exclude;
+            pointer-events: none;
+            animation: borderFlow 4s linear infinite;
+            z-index: 0;
+        }
+        .clock-modern > * { position: relative; z-index: 1; }
+        
+        @keyframes borderFlow {
+            0% { background-position: 0% 50%; }
+            100% { background-position: 300% 50%; }
+        }
+
+        .clock-modern .clock-icon-wrap {
+            width: 32px; height: 32px;
+            background: linear-gradient(135deg, rgba(59, 130, 246, 0.25), rgba(167, 139, 250, 0.25));
+            border-radius: 50%;
+            display: flex; align-items: center; justify-content: center;
+            flex-shrink: 0;
+            border: 1px solid rgba(255, 255, 255, 0.08);
+        }
+        .clock-modern .clock-icon-wrap svg { 
+            width: 16px; height: 16px; 
+            color: #93c5fd;
+            filter: drop-shadow(0 0 6px rgba(59, 130, 246, 0.3));
+        }
+        .clock-modern .clock-info { display: flex; flex-direction: column; line-height: 1.1; }
+        .clock-modern .clock-time { 
+            font-size: 16px; font-weight: 800; 
+            background: linear-gradient(135deg, #ffffff 0%, #93c5fd 50%, #c4b5fd 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            letter-spacing: 0.02em;
+            font-variant-numeric: tabular-nums;
+        }
+        .clock-modern .clock-time .seconds { 
+            font-size: 11px; font-weight: 600; 
+            color: rgba(148, 163, 184, 0.5);
+            -webkit-text-fill-color: rgba(148, 163, 184, 0.5);
+        }
+        .clock-modern .clock-date { 
+            font-size: 9px; font-weight: 600; 
+            color: rgba(148, 163, 184, 0.6);
+            letter-spacing: 0.05em; 
+            text-transform: uppercase;
+        }
+
+        .book-card {
+            position: relative; background: #ffffff; border-radius: 20px; padding: 14px; cursor: pointer;
+            transition: transform 0.4s cubic-bezier(0.4, 0, 0.2, 1), box-shadow 0.4s ease;
+            display: flex; flex-direction: column; border: 1px solid rgba(226, 232, 240, 0.6);
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.15); overflow: visible;
+        }
+        .book-card::before {
+            content: ''; position: absolute; inset: -1px; border-radius: 21px; padding: 2.5px;
+            background: linear-gradient(135deg, #3b82f6, #8b5cf6, #ec4899, #f59e0b, #10b981, #3b82f6);
+            background-size: 300% 300%;
+            -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+            -webkit-mask-composite: xor; mask-composite: exclude;
+            opacity: 0; transition: opacity 0.4s ease, box-shadow 0.4s ease; z-index: 1; pointer-events: none;
+            animation: borderFlow 5s linear infinite;
+        }
+        .book-card:hover::before { opacity: 1; box-shadow: 0 0 20px rgba(59, 130, 246, 0.15); }
+        .book-card:hover { transform: translateY(-8px); box-shadow: 0 12px 40px rgba(0, 0, 0, 0.2); }
+        .book-card:hover .book-thumbnail { transform: scale(1.03); }
+        .book-card > * { position: relative; z-index: 2; }
+
+        .book-thumbnail { width: 100%; aspect-ratio: 3/4; object-fit: cover; border-radius: 14px; margin-bottom: 12px; background: #f1f5f9; border: 1px solid #e8edf2; flex-shrink: 0; transition: transform 0.4s cubic-bezier(0.4, 0, 0.2, 1); }
+        .book-title { font-weight: 700; font-size: 0.9rem; color: #0f172a; line-height: 1.4; margin-bottom: 4px; word-wrap: break-word; }
+        .book-author { font-size: 0.8rem; color: #64748b; font-weight: 500; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; min-height: 2.2em; line-height: 1.4; }
+        .book-size { font-size: 0.7rem; color: #94a3b8; margin-top: 6px; flex-shrink: 0; font-weight: 600; }
+
+        .book-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(180px, 1fr)); gap: 28px; padding: 8px; }
+
+        .book-loading { display: flex; justify-content: center; align-items: center; padding: 80px; color: rgba(255, 255, 255, 0.8); font-weight: 600; gap: 12px; grid-column: 1/-1; }
+        .book-loading .spinner { width: 32px; height: 32px; border: 3px solid rgba(255,255,255,0.2); border-top-color: #60a5fa; border-radius: 50%; animation: spin 0.8s linear infinite; }
+        @keyframes spin { to { transform: rotate(360deg); } }
+        .book-empty { text-align: center; padding: 80px 20px; color: rgba(255, 255, 255, 0.7); grid-column: 1/-1; background: rgba(255, 255, 255, 0.05); border-radius: 20px; border: 1px solid rgba(255, 255, 255, 0.1); backdrop-filter: blur(10px); }
+        .book-empty svg { width: 64px; height: 64px; margin: 0 auto 16px; opacity: 0.5; color: white; }
+        .book-empty h3 { font-size: 1.2rem; font-weight: 700; color: white; margin-bottom: 8px; }
+        .book-empty p { color: rgba(255, 255, 255, 0.6); }
+        
+        .main-footer { margin-top: 48px; text-align: center; font-size: 12px; color: rgba(255, 255, 255, 0.5); font-weight: 500; letter-spacing: 0.05em; padding: 24px 16px; border-top: 1px solid rgba(255, 255, 255, 0.1); backdrop-filter: blur(10px); background: rgba(255, 255, 255, 0.03); border-radius: 16px 16px 0 0; }
+        .main-footer span { color: rgba(191, 219, 254, 0.8); font-weight: 700; }
+        
+        .book-viewer-modal { display: none; position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; background: #000; z-index: 9999; }
+        .book-viewer-frame { width: 100vw; height: 100vh; border: none; background: #000; }
+
+        .book-viewer-controls { position: fixed; top: 20px; right: 20px; z-index: 10002; display: flex; gap: 10px; align-items: center; }
+        .viewer-btn { display: flex; align-items: center; gap: 6px; padding: 12px 20px; border-radius: 12px; font-size: 12px; font-weight: 700; cursor: pointer; transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1); font-family: 'Plus Jakarta Sans', sans-serif; border: 1px solid rgba(255, 255, 255, 0.2); backdrop-filter: blur(12px); background: rgba(0, 0, 0, 0.5); color: white; box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3); }
+        .viewer-btn:hover { transform: translateY(-2px) scale(1.02); box-shadow: 0 8px 30px rgba(0, 0, 0, 0.4); }
+        .viewer-btn .btn-label { font-size: 11px; font-weight: 600; }
+        .viewer-btn-close { background: rgba(239, 68, 68, 0.3); border-color: rgba(239, 68, 68, 0.3); padding: 12px 20px; }
+        .viewer-btn-close:hover { background: rgba(239, 68, 68, 0.5); }
+
+        #driveDownloadBlocker {
+            position: absolute; top: 0; right: 0; width: 110px; height: 55px;
+            background: #f1f3f4; z-index: 10001; display: none; pointer-events: auto;
+        }
+
+        .toast { position: fixed; bottom: 30px; left: 50%; transform: translateX(-50%); background: rgba(15, 23, 42, 0.95); backdrop-filter: blur(12px); color: white; padding: 14px 24px; border-radius: 16px; font-weight: 600; font-size: 0.9rem; z-index: 99999; box-shadow: 0 10px 40px rgba(0,0,0,0.3); border: 1px solid rgba(255,255,255,0.06); animation: toastIn 0.3s ease; display: none; align-items: center; gap: 12px; max-width: 90%; }
+        .toast.show { display: flex; }
+        @keyframes toastIn { from { opacity: 0; transform: translateX(-50%) translateY(20px) scale(0.95); } to { opacity: 1; transform: translateX(-50%) translateY(0) scale(1); } }
+        
+        .ai-popup-overlay, .confirm-modal-overlay { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.6); backdrop-filter: blur(8px); z-index: 10000; align-items: center; justify-content: center; padding: 20px; }
+        .ai-popup-overlay.active, .confirm-modal-overlay.active { display: flex; }
+        .ai-popup { background: white; border-radius: 24px; width: 100%; max-width: 640px; height: 78vh; max-height: 600px; display: flex; flex-direction: column; overflow: hidden; box-shadow: 0 25px 60px rgba(0,0,0,0.5); animation: popupIn 0.3s ease; }
+        .confirm-modal { background: white; border-radius: 24px; padding: 32px 28px; max-width: 360px; width: 90%; text-align: center; box-shadow: 0 25px 60px rgba(0,0,0,0.5); animation: popupIn 0.3s ease; }
+        @keyframes popupIn { from { opacity: 0; transform: scale(0.95) translateY(20px); } to { opacity: 1; transform: scale(1) translateY(0); } }
+        
+        .ai-popup-header { padding: 16px 20px; border-bottom: 1px solid #e2e8f0; display: flex; justify-content: space-between; align-items: center; flex-shrink: 0; background: #f8fafc; }
+        .ai-popup-header .title { font-weight: 800; font-size: 1.1rem; color: #0f172a; display: flex; align-items: center; gap: 8px; }
+        .ai-popup-close { cursor: pointer; padding: 8px 12px; border-radius: 12px; transition: all 0.2s; background: none; border: none; color: #94a3b8; font-size: 18px; }
+        .ai-popup-close:hover { background: #f1f5f9; color: #0f172a; }
+        .ai-chat-container { display: flex; flex-direction: column; height: 100%; }
+        .ai-chat-messages { flex: 1; overflow-y: auto; padding: 20px; display: flex; flex-direction: column; gap: 12px; background: #f8fafc; }
+        .ai-chat-input { padding: 16px 20px; background: white; border-top: 1px solid #e2e8f0; display: flex; gap: 10px; align-items: center; }
+        .ai-chat-input input { flex: 1; border: 1px solid #cbd5e1; border-radius: 12px; padding: 12px 16px; font-size: 14px; outline: none; font-family: 'Plus Jakarta Sans', sans-serif; transition: all 0.2s; }
+        .ai-chat-input input:focus { border-color: #3b82f6; box-shadow: 0 0 0 3px rgba(59,130,246,0.1); }
+        .ai-chat-input button { background: linear-gradient(135deg, #0f172a, #334155); border: none; border-radius: 12px; width: 44px; height: 44px; display: flex; align-items: center; justify-content: center; cursor: pointer; transition: all 0.2s; color: white; flex-shrink: 0; }
+        .ai-chat-input button:hover { transform: scale(1.05); background: #0f172a; }
+        
+        .message { display: flex; max-width: 85%; }
+        .message.user { align-self: flex-end; justify-content: flex-end; }
+        .message.ai { align-self: flex-start; }
+        .bubble { padding: 12px 16px; border-radius: 16px; font-size: 14px; line-height: 1.5; word-wrap: break-word; white-space: pre-wrap; }
+        .user .bubble { background: linear-gradient(135deg, #0f172a, #1e293b); color: white; border-bottom-right-radius: 4px; }
+        .ai .bubble { background: white; border: 1px solid #e2e8f0; color: #1e293b; border-bottom-left-radius: 4px; box-shadow: 0 1px 2px rgba(0,0,0,0.04); }
+        
+        .typing-indicator { display: flex; gap: 4px; padding: 12px 16px; background: white; border-radius: 16px; width: fit-content; border: 1px solid #e2e8f0; }
+        .typing-indicator span { width: 8px; height: 8px; background: #94a3b8; border-radius: 50%; animation: pulse 1.2s infinite ease-in-out; }
+        .typing-indicator span:nth-child(2) { animation-delay: 0.2s; }
+        .typing-indicator span:nth-child(3) { animation-delay: 0.4s; }
+        @keyframes pulse { 0%, 60%, 100% { transform: scale(0.8); opacity: 0.5; } 30% { transform: scale(1.2); opacity: 1; } }
+
+        .tools-popup-overlay { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(15, 23, 42, 0.7); backdrop-filter: blur(8px); z-index: 10000; align-items: center; justify-content: center; padding: 20px; }
+        .tools-popup-overlay.active { display: flex; }
+        .tools-popup-modal { background: white; border-radius: 24px; width: 100%; max-width: 900px; max-height: 85vh; display: flex; flex-direction: column; overflow: hidden; box-shadow: 0 25px 60px rgba(0,0,0,0.5); animation: popupIn 0.3s ease; }
+        .tools-popup-header { padding: 20px 24px; border-bottom: 1px solid #e2e8f0; display: flex; justify-content: space-between; align-items: center; background: #f8fafc; }
+        .tools-popup-header h3 { font-weight: 800; font-size: 1.2rem; color: #0f172a; }
+        .tools-popup-close { cursor: pointer; padding: 8px 12px; border-radius: 12px; transition: all 0.2s; background: none; border: none; color: #94a3b8; font-size: 18px; }
+        .tools-popup-close:hover { background: #f1f5f9; color: #0f172a; }
+        .tools-popup-body { padding: 24px; overflow-y: auto; display: grid; grid-template-columns: repeat(auto-fill, minmax(250px, 1fr)); gap: 24px; }
+        .tool-category { display: flex; flex-direction: column; gap: 12px; }
+        .category-title { font-size: 12px; font-weight: 800; color: #475569; text-transform: uppercase; letter-spacing: 0.1em; display: flex; align-items: center; gap: 8px; padding-bottom: 8px; border-bottom: 1px solid #f1f5f9; }
+        .category-title .dot { width: 8px; height: 8px; border-radius: 50%; display: inline-block; }
+        .dot-ai { background: #3b82f6; } .dot-pdf { background: #fb923c; } .dot-citation { background: #34d399; }
+        .category-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 10px; }
+        .tool-grid-item { display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 8px; padding: 14px 10px; border-radius: 14px; background: #f8fafc; border: 1px solid transparent; cursor: pointer; transition: all 0.2s ease; font-family: 'Plus Jakarta Sans', sans-serif; }
+        .tool-grid-item:hover { background: white; border-color: #e2e8f0; box-shadow: 0 4px 12px rgba(0,0,0,0.05); transform: translateY(-2px); }
+        .tool-grid-item .icon { font-size: 24px; }
+        .tool-grid-item .name { font-size: 12px; font-weight: 600; color: #334155; text-align: center; line-height: 1.3; }
+
+        .google-book-card {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.3);
+            border-radius: 16px;
+            padding: 16px;
+            margin-bottom: 12px;
+            transition: all 0.3s ease;
+            display: flex;
+            gap: 16px;
+            cursor: pointer;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+        }
+        .google-book-card:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 12px 30px rgba(0, 0, 0, 0.2);
+            border-color: rgba(59, 130, 246, 0.4);
+        }
+        .google-book-card .cover {
+            width: 90px;
+            height: 130px;
+            flex-shrink: 0;
+            border-radius: 10px;
+            overflow: hidden;
+            background: #f1f5f9;
+            border: 1px solid #e2e8f0;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+        }
+        .google-book-card .cover img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+        .google-book-card .info {
+            flex: 1;
+            min-width: 0;
+            display: flex;
+            flex-direction: column;
+            gap: 4px;
+        }
+        .google-book-card .info .title {
+            color: #0f172a;
+            font-weight: 700;
+            font-size: 15px;
+            line-height: 1.3;
+            margin-bottom: 2px;
+            display: -webkit-box;
+            -webkit-line-clamp: 2;
+            -webkit-box-orient: vertical;
+            overflow: hidden;
+        }
+        .google-book-card .info .author {
+            color: #3b82f6;
+            font-size: 12px;
+            font-weight: 600;
+        }
+        .google-book-card .info .meta {
+            color: #64748b;
+            font-size: 11px;
+            display: flex;
+            gap: 10px;
+            flex-wrap: wrap;
+            margin-top: 2px;
+        }
+        .google-book-card .info .meta span {
+            display: inline-flex;
+            align-items: center;
+            gap: 3px;
+        }
+        .google-book-card .info .description {
+            color: #475569;
+            font-size: 12px;
+            line-height: 1.5;
+            margin-top: 6px;
+            display: -webkit-box;
+            -webkit-line-clamp: 2;
+            -webkit-box-orient: vertical;
+            overflow: hidden;
+        }
+        .google-book-card .actions {
+            display: flex;
+            flex-direction: column;
+            gap: 6px;
+            flex-shrink: 0;
+        }
+        .google-book-card .actions button {
+            padding: 8px 14px;
+            border-radius: 40px;
+            border: none;
+            font-weight: 700;
+            font-size: 11px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-family: 'Plus Jakarta Sans', sans-serif;
+            white-space: nowrap;
+        }
+        .google-book-card .actions .btn-preview {
+            background: linear-gradient(135deg, #3b82f6, #8b5cf6);
+            color: white;
+        }
+        .google-book-card .actions .btn-preview:hover {
+            transform: scale(1.05);
+            box-shadow: 0 4px 16px rgba(59, 130, 246, 0.3);
+        }
+        .google-book-card .actions .btn-info {
+            background: #f1f5f9;
+            color: #475569;
+        }
+        .google-book-card .actions .btn-info:hover {
+            background: #e2e8f0;
+        }
+
+        .google-status {
+            color: rgba(255, 255, 255, 0.5);
+            text-align: center;
+            padding: 40px 20px;
+            font-weight: 500;
+            font-size: 14px;
+        }
+        .google-status .spinner {
+            display: inline-block;
+            width: 20px; height: 20px;
+            border: 2px solid rgba(255,255,255,0.1);
+            border-top-color: #60a5fa;
+            border-radius: 50%;
+            animation: spin 0.6s linear infinite;
+            margin-right: 10px;
+            vertical-align: middle;
+        }
+
+        .google-search-hint {
+            color: rgba(255, 255, 255, 0.3);
+            font-size: 11px;
+            text-align: center;
+            padding: 8px;
+            font-weight: 500;
+            margin-top: 4px;
+        }
+        .google-search-hint kbd {
+            background: rgba(255,255,255,0.06);
+            padding: 2px 8px;
+            border-radius: 6px;
+            font-size: 10px;
+            color: rgba(255,255,255,0.5);
+            font-family: inherit;
+        }
+
+        .filter-bar {
+            background: rgba(255, 255, 255, 0.06);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            border-radius: 16px;
+            padding: 14px 18px;
+            margin-bottom: 16px;
+            display: flex;
+            flex-wrap: wrap;
+            gap: 12px;
+            align-items: flex-end;
+        }
+
+        .filter-group {
+            display: flex;
+            flex-direction: column;
+            gap: 4px;
+            flex: 1;
+            min-width: 120px;
+        }
+
+        .filter-group label {
+            font-size: 10px;
+            font-weight: 700;
+            color: rgba(255, 255, 255, 0.6);
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+        }
+
+        .filter-group input,
+        .filter-group select {
+            padding: 8px 12px;
+            border-radius: 10px;
+            background: rgba(255, 255, 255, 0.08);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            color: white;
+            font-size: 13px;
+            font-weight: 600;
+            font-family: inherit;
+            outline: none;
+            transition: all 0.2s;
+        }
+
+        .filter-group input:focus,
+        .filter-group select:focus {
+            border-color: #3b82f6;
+            background: rgba(255, 255, 255, 0.12);
+        }
+
+        .filter-group select option {
+            background: #1e293b;
+            color: white;
+        }
+
+        .filter-group input::placeholder {
+            color: rgba(255, 255, 255, 0.3);
+        }
+
+        .filter-btn-apply {
+            padding: 9px 20px;
+            border-radius: 10px;
+            border: none;
+            background: linear-gradient(135deg, #3b82f6, #8b5cf6);
+            color: white;
+            font-weight: 700;
+            font-size: 12px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-family: inherit;
+            white-space: nowrap;
+            box-shadow: 0 4px 12px rgba(59, 130, 246, 0.25);
+        }
+
+        .filter-btn-apply:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(59, 130, 246, 0.4);
+        }
+
+        .filter-btn-reset {
+            padding: 9px 16px;
+            border-radius: 10px;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            background: rgba(255, 255, 255, 0.05);
+            color: rgba(255, 255, 255, 0.8);
+            font-weight: 600;
+            font-size: 12px;
+            cursor: pointer;
+            transition: all 0.2s;
+            font-family: inherit;
+        }
+
+        .filter-btn-reset:hover {
+            background: rgba(255, 255, 255, 0.1);
+            color: white;
+        }
+
+        .translator-fab {
+            position: fixed; bottom: 24px; right: 24px;
+            width: 48px; height: 48px;
+            background: linear-gradient(135deg, #3b82f6, #8b5cf6);
+            border-radius: 50%;
+            display: flex; align-items: center; justify-content: center;
+            cursor: pointer;
+            box-shadow: 0 4px 16px rgba(59, 130, 246, 0.35);
+            z-index: 10003;
+            transition: all 0.3s ease;
+            border: 2px solid rgba(255,255,255,0.15);
+        }
+        .translator-fab:hover { transform: scale(1.08); }
+        .translator-fab svg { width: 22px; height: 22px; color: white; }
+        .translator-fab.active { background: linear-gradient(135deg, #ef4444, #dc2626); }
+
+        .translator-panel {
+            display: none;
+            position: fixed; bottom: 85px; right: 24px;
+            width: 340px; max-width: calc(100vw - 32px);
+            background: rgba(15, 23, 42, 0.93);
+            backdrop-filter: blur(16px);
+            border: 1px solid rgba(255,255,255,0.08);
+            border-radius: 16px;
+            box-shadow: 0 16px 40px rgba(0,0,0,0.5);
+            z-index: 10003;
+            padding: 16px;
+            flex-direction: column;
+            max-height: 60vh;
+        }
+        .translator-panel.active { display: flex; animation: popupIn 0.25s ease; }
+
+        .translator-panel .header {
+            display: flex; justify-content: space-between; align-items: center;
+            margin-bottom: 10px;
+        }
+        .translator-panel .header span {
+            font-weight: 700; font-size: 13px; color: white;
+            display: flex; align-items: center; gap: 6px;
+        }
+        .translator-panel .header button {
+            background: none; border: none; color: rgba(255,255,255,0.4);
+            cursor: pointer; font-size: 16px; padding: 0 4px;
+        }
+        .translator-panel .header button:hover { color: white; }
+
+        .translator-panel .lang-selector {
+            margin: 6px 0 10px 0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            padding: 8px 12px;
+            background: rgba(255,255,255,0.05);
+            border-radius: 30px;
+            border: 1px solid rgba(255,255,255,0.06);
+            flex-wrap: wrap;
+        }
+        .translator-panel .lang-selector .lang-group {
+            display: flex;
+            align-items: center;
+            gap: 4px;
+        }
+        .translator-panel .lang-selector .lang-label {
+            font-size: 8px;
+            font-weight: 700;
+            color: rgba(255,255,255,0.3);
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+        }
+        .translator-panel .lang-selector select {
+            padding: 3px 8px 3px 6px;
+            border-radius: 16px;
+            background: rgba(255,255,255,0.06);
+            border: 1px solid rgba(255,255,255,0.08);
+            color: white;
+            font-size: 11px;
+            font-weight: 600;
+            font-family: inherit;
+            outline: none;
+            cursor: pointer;
+            appearance: none;
+            -webkit-appearance: none;
+            background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='8' height='5'%3E%3Cpath d='M0 0l4 5 4-5z' fill='rgba(255,255,255,0.4)'/%3E%3C/svg%3E");
+            background-repeat: no-repeat;
+            background-position: right 4px center;
+            padding-right: 18px;
+            text-align: center;
+            min-width: 80px;
+        }
+        .translator-panel .lang-selector select option {
+            background: #1e293b;
+            color: white;
+            text-align: center;
+        }
+        .translator-panel .lang-selector .swap-btn {
+            background: rgba(255,255,255,0.05);
+            border: none;
+            color: rgba(255,255,255,0.4);
+            cursor: pointer;
+            padding: 2px 6px;
+            border-radius: 12px;
+            font-size: 14px;
+            transition: all 0.3s ease;
+        }
+        .translator-panel .lang-selector .swap-btn:hover {
+            background: rgba(255,255,255,0.1);
+            color: white;
+            transform: rotate(180deg);
+        }
+        .translator-panel .lang-selector .from-flag,
+        .translator-panel .lang-selector .to-flag {
+            font-size: 14px;
+        }
+
+        .translator-panel textarea {
+            width: 100%; padding: 10px 12px; border-radius: 10px;
+            background: rgba(255,255,255,0.04); border: 1px solid rgba(255,255,255,0.06);
+            color: white; font-size: 13px; font-family: inherit;
+            resize: vertical; min-height: 50px; max-height: 100px;
+            outline: none; transition: border 0.2s;
+        }
+        .translator-panel textarea:focus { border-color: #3b82f6; }
+        .translator-panel textarea::placeholder { color: rgba(255,255,255,0.25); }
+
+        .translator-panel .output {
+            margin-top: 8px; padding: 10px 12px; border-radius: 10px;
+            background: rgba(255,255,255,0.03); border: 1px solid rgba(255,255,255,0.05);
+            color: #e2e8f0; font-size: 13px; line-height: 1.5;
+            min-height: 40px; white-space: pre-wrap; word-wrap: break-word;
+            display: flex; align-items: center; color: rgba(255,255,255,0.4);
+        }
+        .translator-panel .output.loading { color: #94a3b8; font-style: italic; }
+        .translator-panel .output.has-result { color: #e2e8f0; align-items: flex-start; }
+
+        @media (max-width: 768px) {
+            .header-inner { flex-wrap: wrap; gap: 10px; padding: 0 16px; }
+            .header-left { flex: 0 0 auto; }
+            .header-center { flex: 1 1 100%; order: 3; padding: 0; max-width: 100%; }
+            .logo-icon-wrapper { width: 44px; height: 44px; }
+            .header-title { font-size: 1.1rem; }
+            .header-subtitle { font-size: 8px; }
+            .header-credit { display: none; }
+            .header-right { flex-wrap: wrap; justify-content: flex-end; gap: 5px; }
+            .count-badge { padding: 4px 10px; font-size: 10px; }
+            .header-btn { padding: 5px 10px; font-size: 10px; }
+            .header-btn .btn-label { display: none; }
+            .header-btn .btn-icon { font-size: 14px; }
+            .header-divider { display: none; }
+            .top-bar { flex-direction: column; align-items: stretch; gap: 8px; }
+            .tab-switcher { justify-content: center; }
+            .clock-modern { align-self: center; }
+            .google-book-card { flex-direction: column; }
+            .google-book-card .cover { width: 100%; height: 180px; }
+            .google-book-card .actions { flex-direction: row; }
+            .google-book-card .actions button { flex: 1; }
+            .filter-bar { flex-direction: column; }
+            .filter-group { min-width: 100%; }
+            .translator-panel { bottom: 76px; right: 12px; left: 12px; width: auto; padding: 14px; }
+            .translator-fab { bottom: 16px; right: 16px; width: 44px; height: 44px; }
+            .translator-panel .lang-selector select { min-width: 60px; font-size: 10px; }
+        }
+
+        @media (max-width: 640px) {
+            .book-grid { grid-template-columns: repeat(auto-fill, minmax(140px, 1fr)); gap: 18px; padding: 4px; }
+            .book-title { font-size: 0.8rem; }
+            .tools-popup-body { grid-template-columns: 1fr; gap: 16px; padding: 16px; }
+            .book-viewer-controls { top: 12px; right: 12px; gap: 6px; }
+            .viewer-btn { padding: 8px 14px; border-radius: 10px; }
+            .viewer-btn .btn-label { display: none; }
+            .tab-switcher .tab-btn { font-size: 10px; padding: 6px 12px; }
+            .filter-btn-apply, .filter-btn-reset { width: 100%; }
+        }
     </style>
-  </head>
-  <body>
-    <div class="loading" id="loading">⏳ Memuat Ruang Baca Digital...</div>
-    
-    <iframe 
-      id="mainFrame"
-      src="https://script.google.com/macros/s/AKfycbwW-9mQmwlK1tmFULhhZ__EH_-hIPle4ljYrfUImzbmzIjDTSBWGyPPNYw26k7gnFwBpg/exec"
-      allow="fullscreen"
-    ></iframe>
-    
+</head>
+<body>
+
+    <!-- ============================================ -->
+    <!-- PAGE LOGIN (muncul jika belum login)          -->
+    <!-- ============================================ -->
+    <div id="pageLogin" style="display: none; min-height: 100vh; display: flex; align-items: center; justify-content: center; padding: 20px;">
+        <div style="background: white; border-radius: 24px; padding: 40px 35px; max-width: 400px; width: 100%; box-shadow: 0 20px 60px rgba(0,0,0,0.3);">
+            <div style="text-align: center; margin-bottom: 30px;">
+                <h2 style="color: #0b4e96; font-size: 22px; font-weight: 800;">📚 Ruang Baca Digital</h2>
+                <p style="color: #718096; font-size: 14px;">STIE Latifah Mubarokiyah</p>
+                <hr style="margin: 15px 0; border-color: #e2e8f0;">
+                <p style="font-size: 13px; color: #718096;">Silakan login untuk melanjutkan</p>
+            </div>
+            
+            <div id="loginAlert" style="display: none; background: #fff5f5; border: 1px solid #fed7d7; color: #742a2a; padding: 10px 14px; border-radius: 8px; margin-bottom: 15px; font-size: 13px;"></div>
+            
+            <div style="margin-bottom: 16px;">
+                <label style="display: block; font-weight: 600; margin-bottom: 5px; font-size: 14px; color: #4a5568;">Username</label>
+                <input type="text" id="loginUsername" placeholder="Masukkan username" style="width:100%; padding:10px 14px; border:1px solid #e2e8f0; border-radius:8px; font-size:14px;">
+            </div>
+            <div style="margin-bottom: 20px;">
+                <label style="display: block; font-weight: 600; margin-bottom: 5px; font-size: 14px; color: #4a5568;">Password</label>
+                <input type="password" id="loginPassword" placeholder="Masukkan password" style="width:100%; padding:10px 14px; border:1px solid #e2e8f0; border-radius:8px; font-size:14px;">
+            </div>
+            
+            <button onclick="doLogin()" style="width:100%; padding:12px; border:none; border-radius:8px; background:#0b4e96; color:white; font-weight:700; font-size:16px; cursor:pointer; transition:all 0.3s;" id="loginBtn">
+                🔑 Login
+            </button>
+            
+            <div id="loginError" style="color:#e53e3e; font-size:14px; margin-top:10px; text-align:center;"></div>
+        </div>
+    </div>
+
+    <!-- ============================================ -->
+    <!-- PAGE MAIN (setelah login)                    -->
+    <!-- ============================================ -->
+    <div id="pageMain" style="display: none;">
+
+        <!-- HEADER PREMIUM -->
+        <div class="header-sticky">
+            <header class="header-gradient">
+                <div class="header-inner">
+                    <div class="header-left">
+                        <div class="logo-icon-wrapper">
+                            <img src="https://drive.google.com/thumbnail?id=102L9NqOdjFgETx_400xkoNDSFWq2ewjm&sz=w500" alt="Logo STIE LM">
+                        </div>
+                        <div class="header-title-group">
+                            <h1 class="header-title">
+                                <span class="gradient-text">Ruang Baca Digital</span>
+                            </h1>
+                            <p class="header-subtitle">UPT Perpustakaan STIE LM 2026</p>
+                            <p class="header-credit">by <span> Drs. Ujang Mulyanto, M.M.</span></p>
+                        </div>
+                    </div>
+
+                    <div class="header-center">
+                        <div class="header-search-bar">
+                            <span class="search-icon">🔍</span>
+                            <input type="text" id="searchInput" placeholder="Cari judul atau penulis..." oninput="handleSearchInput()">
+                            <button class="clear-btn" onclick="clearSearch()">✕</button>
+                        </div>
+                    </div>
+
+                    <div class="header-right">
+                        <span class="count-badge" id="bookCount">
+                            <span class="badge-dot"></span>
+                            <span>0 Buku</span>
+                        </span>
+                        <span class="header-divider"></span>
+                        <button onclick="openToolsPopup()" class="header-btn header-btn-tools" title="Pusat Tools Digital">
+                            <span class="btn-icon">✨</span>
+                            <span class="btn-label">Tools</span>
+                        </button>
+                        <button id="adminBtn" style="display:none;" onclick="window.location.href = getUrlWithToken(SCRIPT_URL + '?admin=1')" class="header-btn header-btn-admin" title="Panel Admin">
+                            <span class="btn-icon">⚙️</span>
+                            <span class="btn-label">Admin</span>
+                        </button>
+                        <button onclick="logoutUser()" class="header-btn header-btn-logout" title="Keluar">
+                            <span class="btn-icon">🚪</span>
+                            <span class="btn-label">Logout</span>
+                        </button>
+                    </div>
+                </div>
+            </header>
+        </div>
+
+        <!-- TOP BAR: TAB SWITCHER + JAM -->
+        <div class="top-bar">
+            <div class="tab-switcher">
+                <button class="tab-btn active" data-tab="local" onclick="switchTab('local')">
+                    📚 Koleksi Lokal
+                    <span class="badge" id="localCount">0</span>
+                </button>
+                <button class="tab-btn" data-tab="google" onclick="switchTab('google')">
+                    🌐 Open Library
+                    <span class="badge" id="googleCount">0</span>
+                </button>
+            </div>
+
+            <div class="clock-modern">
+                <div class="clock-icon-wrap">
+                    <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"/>
+                    </svg>
+                </div>
+                <div class="clock-info">
+                    <span class="clock-time" id="liveClockModern">
+                        00:00<span class="seconds" id="liveSeconds">00</span>
+                    </span>
+                    <span class="clock-date" id="liveDateModern">Minggu, 28 Juni 2026</span>
+                </div>
+            </div>
+        </div>
+
+        <!-- MAIN CONTENT -->
+        <main class="max-w-7xl mx-auto px-4 py-4">
+            <!-- KOLEKSI LOKAL -->
+            <div id="bookGridContainer" class="relative">
+                <div id="bookGrid" class="book-grid">
+                    <div class="book-loading">
+                        <div class="spinner"></div>
+                        <span>Memuat koleksi buku...</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- OPEN LIBRARY -->
+            <div id="googleSection" style="display: none; margin-top: 20px;">
+                <div class="filter-bar">
+                    <div class="filter-group">
+                        <label>📅 Tahun Dari</label>
+                        <input type="number" id="filterYearFrom" placeholder="1900" min="1000" max="2030">
+                    </div>
+                    <div class="filter-group">
+                        <label>📅 Tahun Ke</label>
+                        <input type="number" id="filterYearTo" placeholder="2026" min="1000" max="2030">
+                    </div>
+                    <div class="filter-group">
+                        <label>🌐 Bahasa</label>
+                        <select id="filterLanguage">
+                            <option value="">Semua Bahasa</option>
+                            <option value="ind">🇮🇩 Indonesia</option>
+                            <option value="eng">🇬🇧 Inggris</option>
+                            <option value="ara">🇸🇦 Arab</option>
+                        </select>
+                    </div>
+                    <div class="filter-group">
+                        <label>📊 Jumlah Hasil</label>
+                        <select id="filterLimit">
+                            <option value="20">20 Buku</option>
+                            <option value="50" selected>50 Buku</option>
+                            <option value="100">100 Buku</option>
+                        </select>
+                    </div>
+                    <button class="filter-btn-apply" onclick="applyFilters()">🔍 Terapkan</button>
+                    <button class="filter-btn-reset" onclick="resetFilters()">↺ Reset</button>
+                </div>
+                
+                <div id="googleResults">
+                    <div class="google-status">
+                        📚 Cari jutaan buku yang bisa dibaca langsung<br>
+                        <span style="font-size: 12px; color: rgba(255,255,255,0.3);">
+                            Gunakan filter di atas untuk mempersempit hasil pencarian
+                        </span>
+                    </div>
+                </div>
+                
+                <div class="google-search-hint">
+                    💡 Tip: Semua buku yang ditampilkan sudah bisa dibaca langsung • 
+                    <kbd>Enter</kbd> untuk cari cepat
+                </div>
+            </div>
+
+            <footer class="main-footer">
+                © 2026 <span>UPT Perpustakaan STIE Latifah Mubarokiyah</span>
+            </footer>
+        </main>
+    </div>
+
+    <!-- BOOK VIEWER -->
+    <div id="bookViewerModal" class="book-viewer-modal">
+        <div class="book-viewer-controls">
+            <button onclick="closeBookViewer()" class="viewer-btn viewer-btn-close" title="Tutup">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                    <line x1="18" y1="6" x2="6" y2="18"/>
+                    <line x1="6" y1="6" x2="18" y2="18"/>
+                </svg>
+                <span class="btn-label">Tutup</span>
+            </button>
+        </div>
+        <iframe id="bookViewerFrame" class="book-viewer-frame" src="about:blank" allowfullscreen></iframe>
+        <div id="driveDownloadBlocker" style="background:#000;"></div>
+    </div>
+
+    <!-- TOAST -->
+    <div id="toast" class="toast">
+        <span id="toastIcon">🚀</span>
+        <span id="toastMessage">Membuka...</span>
+    </div>
+
+    <!-- AI POPUP -->
+    <div id="aiPopup" class="ai-popup-overlay" onclick="closeAIPopupOutside(event)">
+        <div class="ai-popup">
+            <div class="ai-popup-header">
+                <div class="title">✨ STIE LM AI</div>
+                <button class="ai-popup-close" onclick="closeAIChat()">✕</button>
+            </div>
+            <div class="ai-chat-container">
+                <div class="ai-chat-messages" id="aiMessages">
+                    <div class="message ai">
+                        <div class="bubble">
+                            Halo! Saya asisten AI Perpustakaan STIE LM. Silahkan tanyakan apa saja tentang perpustakaan, buku, tugas, skripsi, atau informasi akademik lainnya. 😊
+                        </div>
+                    </div>
+                </div>
+                <div class="ai-chat-input">
+                    <input type="text" id="aiInput" placeholder="Tanyakan sesuatu..." autocomplete="off">
+                    <button onclick="sendAIMessage()">
+                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                            <path d="M14 5l7 7m0 0l-7 7m7-7H3"/>
+                        </svg>
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- TOOLS POPUP -->
+    <div id="toolsPopup" class="tools-popup-overlay" onclick="closeToolsPopupOutside(event)">
+        <div class="tools-popup-modal">
+            <div class="tools-popup-header">
+                <h3>✨ Pusat Tools Digital</h3>
+                <button class="tools-popup-close" onclick="closeToolsPopup()">✕</button>
+            </div>
+            <div class="tools-popup-body">
+                <div class="tool-category">
+                    <div class="category-title"><span class="dot dot-ai"></span> AI & Penulisan</div>
+                    <div class="category-grid">
+                        <div class="tool-grid-item" onclick="openTool('ChatGPT', 'https://chat.openai.com', '🤖')"><span class="icon">🤖</span><span class="name">ChatGPT</span></div>
+                        <div class="tool-grid-item" onclick="openAIChat()"><span class="icon">📚</span><span class="name">AI Perpus</span></div>
+                    </div>
+                </div>
+                <div class="tool-category">
+                    <div class="category-title"><span class="dot dot-pdf"></span> PDF Tools</div>
+                    <div class="category-grid">
+                        <div class="tool-grid-item" onclick="openTool('iLovePDF', 'https://www.ilovepdf.com/', '📄')"><span class="icon">📄</span><span class="name">iLovePDF</span></div>
+                        <div class="tool-grid-item" onclick="openTool('SmallPDF', 'https://smallpdf.com/', '📝')"><span class="icon">📝</span><span class="name">SmallPDF</span></div>
+                    </div>
+                </div>
+                <div class="tool-category">
+                    <div class="category-title"><span class="dot dot-citation"></span> Referensi</div>
+                    <div class="category-grid">
+                        <div class="tool-grid-item" onclick="openTool('Google Scholar', 'https://scholar.google.com', '🎓')"><span class="icon">🎓</span><span class="name">G. Scholar</span></div>
+                        <div class="tool-grid-item" onclick="openTool('Mendeley', 'https://www.mendeley.com', '🔖')"><span class="icon">🔖</span><span class="name">Mendeley</span></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- LOGOUT CONFIRM MODAL -->
+    <div id="confirmModal" class="confirm-modal-overlay">
+        <div class="confirm-modal">
+            <div style="font-size: 40px; margin-bottom: 16px;">🚪</div>
+            <p style="font-size: 18px; font-weight: 700; color: #0f172a; margin-bottom: 8px;">Konfirmasi Logout</p>
+            <p style="font-size: 14px; color: #64748b; margin-bottom: 24px;">Apakah Anda yakin ingin keluar dari sistem perpustakaan?</p>
+            <div style="display: flex; gap: 12px; justify-content: center;">
+                <button onclick="cancelLogout()" class="header-btn" style="background: #f1f5f9; color: #475569; border: none; flex:1; padding: 12px;">Batal</button>
+                <button onclick="confirmLogout()" class="header-btn" style="background: #0f172a; color: white; border: none; flex:1; padding: 12px;">Ya, Logout</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- TRANSLATOR -->
+    <div id="translatorFab" class="translator-fab" onclick="toggleTranslator()" title="STIE-LM Translator">
+        <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 5h12M9 3v2m1.048 9.5A18.022 18.022 0 016.412 9m6.088 9h7M11 21l5-10 5 10M12.751 5C11.783 10.77 8.07 15.61 3 18.129"/>
+        </svg>
+    </div>
+
+    <div id="translatorPanel" class="translator-panel">
+        <div class="header">
+            <span>🌍 STIE-LM Translator Apps 2026</span>
+            <button onclick="toggleTranslator()">✕</button>
+        </div>
+        <textarea id="translateInput" placeholder="Tempel teks di sini..."></textarea>
+        
+        <div class="lang-selector">
+            <div class="lang-group">
+                <span class="lang-label">Dari</span>
+                <span class="from-flag" id="fromFlag">🇮🇩</span>
+                <select id="fromLang">
+                    <option value="Indonesia" data-flag="🇮🇩">Indonesia</option>
+                    <option value="Inggris" data-flag="🇬🇧">Inggris</option>
+                    <option value="Arab" data-flag="🇸🇦">Arab</option>
+                    <option value="Sunda" data-flag="🗻">Sunda</option>
+                    <option value="Jawa" data-flag="🏯">Jawa</option>
+                    <option value="Melayu" data-flag="🇲🇾">Melayu</option>
+                </select>
+            </div>
+            <button class="swap-btn" onclick="swapLanguagesFull()" title="Tukar">↕</button>
+            <div class="lang-group">
+                <span class="lang-label">Ke</span>
+                <span class="to-flag" id="toFlag">🇬🇧</span>
+                <select id="toLang">
+                    <option value="Inggris" data-flag="🇬🇧">Inggris</option>
+                    <option value="Indonesia" data-flag="🇮🇩">Indonesia</option>
+                    <option value="Arab" data-flag="🇸🇦">Arab</option>
+                    <option value="Sunda" data-flag="🗻">Sunda</option>
+                    <option value="Jawa" data-flag="🏯">Jawa</option>
+                    <option value="Melayu" data-flag="🇲🇾">Melayu</option>
+                </select>
+            </div>
+        </div>
+        
+        <div id="translateOutput" class="output">📝 Hasil terjemahan otomatis</div>
+    </div>
+
     <script>
-      document.getElementById('mainFrame').addEventListener('load', function() {
-        document.getElementById('loading').style.display = 'none';
-      });
-      
-      setTimeout(function() {
-        document.getElementById('loading').style.display = 'none';
-      }, 3000);
+        // ============================================
+        // KONFIGURASI - GANTI DENGAN URL APPS SCRIPT ANDA
+        // ============================================
+        var SCRIPT_URL = "https://script.google.com/macros/s/AKfycbwW-9mQmwlK1tmFULhhZ__EH_-hIPle4ljYrfUImzbmzIjDTSBWGyPPNYw26k7gnFwBpg/exec";
+
+        // ============================================
+        // GLOBAL VARIABLES
+        // ============================================
+        var currentToken = null;
+        var currentUser = null;
+        var isAdmin = false;
+        var allBooks = [];
+        var isLoading = false;
+        var isBookViewerOpen = false;
+        var isAIPopupOpen = false;
+        var isToolsPopupOpen = false;
+        var currentTab = 'local';
+        var googleBooks = [];
+        var isGoogleLoading = false;
+        var isTranslatorOpen = false;
+        var translateTimer = null;
+        var isTranslating = false;
+
+        const hariNama = ['Minggu', 'Senin', 'Selasa', 'Rabu', 'Kamis', 'Jumat', 'Sabtu'];
+        const bulanNama = ['Januari', 'Februari', 'Maret', 'April', 'Mei', 'Juni', 'Juli', 'Agustus', 'September', 'Oktober', 'November', 'Desember'];
+
+        // ============================================
+        // TOKEN MANAGEMENT
+        // ============================================
+        function getToken() {
+            var token = localStorage.getItem('sessionToken');
+            return token;
+        }
+
+        function setToken(token) {
+            if (token) {
+                localStorage.setItem('sessionToken', token);
+                currentToken = token;
+            }
+        }
+
+        function clearToken() {
+            localStorage.removeItem('sessionToken');
+            currentToken = null;
+        }
+
+        function getUrlWithToken(baseUrl) {
+            var token = getToken();
+            if (token) {
+                var separator = baseUrl.indexOf('?') > -1 ? '&' : '?';
+                return baseUrl + separator + 'token=' + encodeURIComponent(token);
+            }
+            return baseUrl;
+        }
+
+        // ============================================
+        // API CALL HELPER (FETCH)
+        // ============================================
+        function callAPI(action, params) {
+            var url = SCRIPT_URL + '?action=' + encodeURIComponent(action);
+            for (var key in params) {
+                if (params.hasOwnProperty(key) && params[key] !== null && params[key] !== undefined) {
+                    url += '&' + encodeURIComponent(key) + '=' + encodeURIComponent(params[key]);
+                }
+            }
+            return fetch(url)
+                .then(function(response) {
+                    return response.json();
+                });
+        }
+
+        // ============================================
+        // LOGIN
+        // ============================================
+        function doLogin() {
+            var username = document.getElementById('loginUsername').value.trim();
+            var password = document.getElementById('loginPassword').value.trim();
+            var btn = document.getElementById('loginBtn');
+            var errorDiv = document.getElementById('loginError');
+            var alertDiv = document.getElementById('loginAlert');
+            
+            if (!username || !password) {
+                errorDiv.textContent = 'Username dan password harus diisi!';
+                return;
+            }
+            
+            btn.textContent = '⏳ Memproses...';
+            btn.style.opacity = '0.7';
+            errorDiv.textContent = '';
+            alertDiv.style.display = 'none';
+            
+            callAPI('verifyLogin', {
+                username: username,
+                password: password
+            })
+            .then(function(result) {
+                btn.textContent = '🔑 Login';
+                btn.style.opacity = '1';
+                
+                if (result.success) {
+                    setToken(result.token);
+                    currentUser = result.fullName;
+                    isAdmin = result.isAdmin || false;
+                    showMainPage();
+                } else {
+                    alertDiv.style.display = 'block';
+                    alertDiv.textContent = result.message || 'Login gagal!';
+                }
+            })
+            .catch(function(error) {
+                btn.textContent = '🔑 Login';
+                btn.style.opacity = '1';
+                alertDiv.style.display = 'block';
+                alertDiv.textContent = 'Terjadi kesalahan: ' + error.message;
+            });
+        }
+
+        function showMainPage() {
+            document.getElementById('pageLogin').style.display = 'none';
+            document.getElementById('pageMain').style.display = 'block';
+            
+            if (isAdmin) {
+                document.getElementById('adminBtn').style.display = 'inline-flex';
+            }
+            
+            loadBooks();
+            loadTranslatorSettings();
+            
+            setTimeout(function() {
+                document.getElementById('searchInput').focus();
+            }, 500);
+        }
+
+        // ============================================
+        // LOGOUT
+        // ============================================
+        function logoutUser() {
+            document.getElementById('confirmModal').classList.add('active');
+            document.body.style.overflow = 'hidden';
+        }
+
+        function cancelLogout() {
+            document.getElementById('confirmModal').classList.remove('active');
+            document.body.style.overflow = '';
+        }
+
+        function confirmLogout() {
+            document.getElementById('confirmModal').classList.remove('active');
+            document.body.style.overflow = '';
+            var token = getToken();
+            if (token) {
+                callAPI('logout', { token: token })
+                    .then(function() {
+                        clearToken();
+                        window.location.reload();
+                    })
+                    .catch(function() {
+                        clearToken();
+                        window.location.reload();
+                    });
+            } else {
+                window.location.reload();
+            }
+        }
+
+        // ============================================
+        // CLOCK
+        // ============================================
+        function updateClock() {
+            var now = new Date();
+            var h = String(now.getHours()).padStart(2, '0');
+            var m = String(now.getMinutes()).padStart(2, '0');
+            var s = String(now.getSeconds()).padStart(2, '0');
+            var clockModern = document.getElementById('liveClockModern');
+            if (clockModern) {
+                clockModern.innerHTML = h + ':' + m + '<span class="seconds">' + s + '</span>';
+            }
+            var dateEl = document.getElementById('liveDateModern');
+            if (dateEl) {
+                var day = hariNama[now.getDay()];
+                var date = now.getDate();
+                var month = bulanNama[now.getMonth()];
+                var year = now.getFullYear();
+                dateEl.textContent = day + ', ' + date + ' ' + month + ' ' + year;
+            }
+        }
+        setInterval(updateClock, 1000);
+        updateClock();
+
+        // ============================================
+        // TOAST
+        // ============================================
+        function showToast(message, icon) {
+            icon = icon || '🚀';
+            var toast = document.getElementById('toast');
+            document.getElementById('toastIcon').textContent = icon;
+            document.getElementById('toastMessage').textContent = message;
+            toast.classList.add('show');
+            clearTimeout(toast._timeout);
+            toast._timeout = setTimeout(function() {
+                toast.classList.remove('show');
+            }, 2000);
+        }
+
+        // ============================================
+        // TOOLS POPUP
+        // ============================================
+        function openToolsPopup() {
+            document.getElementById('toolsPopup').classList.add('active');
+            document.body.style.overflow = 'hidden';
+            isToolsPopupOpen = true;
+            history.pushState({ modal: 'toolsPopup' }, '');
+        }
+
+        function closeToolsPopup() {
+            if (!isToolsPopupOpen) return;
+            document.getElementById('toolsPopup').classList.remove('active');
+            document.body.style.overflow = '';
+            isToolsPopupOpen = false;
+            if (history.state && history.state.modal === 'toolsPopup') {
+                history.back();
+            }
+        }
+
+        function closeToolsPopupOutside(event) {
+            if (event.target === event.currentTarget) closeToolsPopup();
+        }
+
+        function openTool(name, url, icon) {
+            closeToolsPopup();
+            showToast('Membuka ' + name + '...', icon);
+            setTimeout(function() { window.open(url, '_blank'); }, 350);
+        }
+
+        // ============================================
+        // AI CHAT
+        // ============================================
+        function openAIChat() {
+            closeToolsPopup();
+            document.getElementById('aiPopup').classList.add('active');
+            document.body.style.overflow = 'hidden';
+            isAIPopupOpen = true;
+            history.pushState({ modal: 'aiPopup' }, '');
+            setTimeout(function() {
+                var input = document.getElementById('aiInput');
+                if (input) {
+                    input.focus();
+                    input.addEventListener('keypress', function(e) {
+                        if (e.key === 'Enter') { e.preventDefault(); sendAIMessage(); }
+                    });
+                }
+            }, 300);
+        }
+
+        function closeAIChat() {
+            if (!isAIPopupOpen) return;
+            document.getElementById('aiPopup').classList.remove('active');
+            document.body.style.overflow = '';
+            isAIPopupOpen = false;
+            if (history.state && history.state.modal === 'aiPopup') {
+                history.back();
+            }
+        }
+
+        function closeAIPopupOutside(event) {
+            if (event.target === event.currentTarget) closeAIChat();
+        }
+
+        function sendAIMessage() {
+            var input = document.getElementById('aiInput');
+            var question = input.value.trim();
+            if (!question) return;
+            addAIMessage(question, true);
+            input.value = '';
+            showAITyping();
+            
+            callAPI('getAIResponse', { question: question })
+                .then(function(result) {
+                    removeAITyping();
+                    var jawaban = result.response || 'Maaf, tidak ada jawaban.';
+                    addAIMessage(jawaban, false);
+                    document.getElementById('aiInput').focus();
+                })
+                .catch(function(error) {
+                    removeAITyping();
+                    addAIMessage('Maaf, terjadi kesalahan: ' + error.message, false);
+                    document.getElementById('aiInput').focus();
+                });
+        }
+
+        function addAIMessage(text, isUser) {
+            var container = document.getElementById('aiMessages');
+            var div = document.createElement('div');
+            div.className = 'message ' + (isUser ? 'user' : 'ai');
+            var bubble = document.createElement('div');
+            bubble.className = 'bubble';
+            bubble.innerHTML = text.replace(/\*\*(.*?)\*\*/g, '<b>$1</b>').replace(/\n/g, '<br>');
+            div.appendChild(bubble);
+            container.appendChild(div);
+            container.scrollTop = container.scrollHeight;
+        }
+
+        function showAITyping() {
+            var container = document.getElementById('aiMessages');
+            var div = document.createElement('div');
+            div.className = 'message ai';
+            div.id = 'aiTyping';
+            div.innerHTML = '<div class="typing-indicator"><span></span><span></span><span></span></div>';
+            container.appendChild(div);
+            container.scrollTop = container.scrollHeight;
+        }
+
+        function removeAITyping() {
+            var el = document.getElementById('aiTyping');
+            if (el) el.remove();
+        }
+
+        // ============================================
+        // TRANSLATOR
+        // ============================================
+        function toggleTranslator() {
+            var panel = document.getElementById('translatorPanel');
+            var fab = document.getElementById('translatorFab');
+            isTranslatorOpen = !isTranslatorOpen;
+            if (isTranslatorOpen) {
+                panel.classList.add('active');
+                fab.classList.add('active');
+                setTimeout(function() {
+                    document.getElementById('translateInput').focus();
+                }, 300);
+            } else {
+                panel.classList.remove('active');
+                fab.classList.remove('active');
+            }
+        }
+
+        document.getElementById('fromLang').addEventListener('change', function() {
+            var selected = this.options[this.selectedIndex];
+            document.getElementById('fromFlag').textContent = selected.dataset.flag;
+            autoTranslate();
+        });
+
+        document.getElementById('toLang').addEventListener('change', function() {
+            var selected = this.options[this.selectedIndex];
+            document.getElementById('toFlag').textContent = selected.dataset.flag;
+            var text = document.getElementById('translateInput').value.trim();
+            if (text) setTimeout(doTranslate, 300);
+            localStorage.setItem('stie_translator_to_lang', this.value);
+        });
+
+        function swapLanguagesFull() {
+            var fromSelect = document.getElementById('fromLang');
+            var toSelect = document.getElementById('toLang');
+            var fromVal = fromSelect.value;
+            var toVal = toSelect.value;
+            fromSelect.value = toVal;
+            toSelect.value = fromVal;
+            var fromSelected = fromSelect.options[fromSelect.selectedIndex];
+            var toSelected = toSelect.options[toSelect.selectedIndex];
+            document.getElementById('fromFlag').textContent = fromSelected.dataset.flag;
+            document.getElementById('toFlag').textContent = toSelected.dataset.flag;
+            var btn = document.querySelector('.swap-btn');
+            btn.style.transform = 'rotate(360deg)';
+            setTimeout(function() { btn.style.transform = ''; }, 500);
+            var text = document.getElementById('translateInput').value.trim();
+            if (text) setTimeout(doTranslate, 300);
+        }
+
+        function autoTranslate() {
+            var text = document.getElementById('translateInput').value.trim();
+            var output = document.getElementById('translateOutput');
+            if (!text) {
+                output.classList.remove('loading', 'has-result');
+                output.innerText = '📝 Hasil terjemahan otomatis';
+                return;
+            }
+            clearTimeout(translateTimer);
+            translateTimer = setTimeout(function() {
+                if (!isTranslating) doTranslate();
+            }, 400);
+        }
+
+        function doTranslate() {
+            var text = document.getElementById('translateInput').value.trim();
+            if (!text) return;
+            var toLang = document.getElementById('toLang').value;
+            var output = document.getElementById('translateOutput');
+            localStorage.setItem('stie_translator_from_lang', document.getElementById('fromLang').value);
+            localStorage.setItem('stie_translator_to_lang', toLang);
+            isTranslating = true;
+            output.classList.add('loading');
+            output.classList.remove('has-result');
+            output.innerText = '🧠 Menerjemahkan...';
+
+            callAPI('translateTextSTIE', {
+                text: text,
+                targetLang: toLang,
+                mode: 'Standar'
+            })
+            .then(function(result) {
+                isTranslating = false;
+                output.classList.remove('loading');
+                output.classList.add('has-result');
+                output.innerText = result || 'Terjemahan kosong.';
+            })
+            .catch(function(error) {
+                isTranslating = false;
+                output.classList.remove('loading');
+                output.innerText = '❌ ' + error.message;
+            });
+        }
+
+        function loadTranslatorSettings() {
+            var savedFrom = localStorage.getItem('stie_translator_from_lang');
+            var savedTo = localStorage.getItem('stie_translator_to_lang');
+            if (savedFrom) {
+                document.getElementById('fromLang').value = savedFrom;
+                var fromSelected = document.getElementById('fromLang').options[document.getElementById('fromLang').selectedIndex];
+                document.getElementById('fromFlag').textContent = fromSelected.dataset.flag;
+            }
+            if (savedTo) {
+                document.getElementById('toLang').value = savedTo;
+                var toSelected = document.getElementById('toLang').options[document.getElementById('toLang').selectedIndex];
+                document.getElementById('toFlag').textContent = toSelected.dataset.flag;
+            }
+        }
+
+        document.getElementById('translateInput').addEventListener('input', autoTranslate);
+
+        document.addEventListener('keydown', function(e) {
+            if (e.ctrlKey && e.shiftKey && (e.key === 'T' || e.key === 't')) {
+                e.preventDefault();
+                toggleTranslator();
+            }
+            if (isTranslatorOpen && (e.ctrlKey || e.metaKey) && e.key === 'Enter') {
+                e.preventDefault();
+                doTranslate();
+            }
+        });
+
+        // ============================================
+        // TAB SWITCHING
+        // ============================================
+        function switchTab(tab) {
+            currentTab = tab;
+            document.querySelectorAll('.tab-btn').forEach(function(btn) {
+                btn.classList.toggle('active', btn.dataset.tab === tab);
+            });
+            var localContainer = document.getElementById('bookGridContainer');
+            var googleSection = document.getElementById('googleSection');
+            var searchInput = document.getElementById('searchInput');
+            if (tab === 'local') {
+                localContainer.style.display = 'block';
+                googleSection.style.display = 'none';
+                searchInput.placeholder = 'Cari judul atau penulis...';
+                searchBooks();
+            } else {
+                localContainer.style.display = 'none';
+                googleSection.style.display = 'block';
+                searchInput.placeholder = 'Cari di Open Library...';
+                var query = searchInput.value.trim();
+                if (query) {
+                    searchGoogleBooks(query);
+                } else {
+                    document.getElementById('googleResults').innerHTML = 
+                        '<div class="google-status">📚 Masukkan judul atau nama penulis di kotak pencarian</div>';
+                }
+            }
+        }
+
+        // ============================================
+        // SEARCH GOOGLE BOOKS
+        // ============================================
+        function searchGoogleBooks(query) {
+            if (!query || query.trim() === '') {
+                document.getElementById('googleResults').innerHTML = 
+                    '<div class="google-status">📝 Masukkan kata kunci untuk mencari buku</div>';
+                return;
+            }
+            if (isGoogleLoading) return;
+            isGoogleLoading = true;
+            var resultsContainer = document.getElementById('googleResults');
+            resultsContainer.innerHTML = '<div class="google-status"><span class="spinner"></span>Mencari buku yang bisa dibaca...</div>';
+            
+            var options = {
+                yearFrom: document.getElementById('filterYearFrom').value || 1900,
+                yearTo: document.getElementById('filterYearTo').value || new Date().getFullYear(),
+                limit: document.getElementById('filterLimit').value || 50,
+                language: document.getElementById('filterLanguage').value || '',
+                readableOnly: true
+            };
+
+            callAPI('searchBooksOnline', {
+                query: query,
+                yearFrom: options.yearFrom,
+                yearTo: options.yearTo,
+                limit: options.limit,
+                language: options.language,
+                readableOnly: options.readableOnly
+            })
+            .then(function(response) {
+                isGoogleLoading = false;
+                renderGoogleBooksResults(response);
+            })
+            .catch(function(error) {
+                isGoogleLoading = false;
+                resultsContainer.innerHTML = 
+                    '<div class="google-status" style="color: #f87171;">❌ ' + error.message + '</div>';
+            });
+        }
+
+        function applyFilters() {
+            var query = document.getElementById('searchInput').value.trim();
+            if (!query) {
+                showToast('Masukkan kata kunci pencarian terlebih dahulu', '⚠️');
+                document.getElementById('searchInput').focus();
+                return;
+            }
+            searchGoogleBooks(query);
+        }
+
+        function resetFilters() {
+            document.getElementById('filterYearFrom').value = '';
+            document.getElementById('filterYearTo').value = '';
+            document.getElementById('filterLanguage').value = '';
+            document.getElementById('filterLimit').value = '50';
+            showToast('Filter direset ke default', '↺');
+            var query = document.getElementById('searchInput').value.trim();
+            if (query && currentTab === 'google') {
+                searchGoogleBooks(query);
+            }
+        }
+
+        function renderGoogleBooksResults(response) {
+            var container = document.getElementById('googleResults');
+            var countBadge = document.getElementById('googleCount');
+            if (!response || response.error) {
+                container.innerHTML = 
+                    '<div class="google-status" style="color: #fcd34d;">⚠️ ' + 
+                    (response ? response.error : 'Terjadi kesalahan') + '</div>';
+                if (countBadge) countBadge.textContent = '0';
+                return;
+            }
+            if (!response.books || response.books.length === 0) {
+                container.innerHTML = 
+                    '<div class="google-status">😕 Tidak ada buku ditemukan. Coba perlonggar filter tahun.</div>';
+                if (countBadge) countBadge.textContent = '0';
+                return;
+            }
+            var books = response.books;
+            googleBooks = books;
+            if (countBadge) countBadge.textContent = books.length;
+            
+            var headerHtml = '<div style="color: rgba(255,255,255,0.8); font-size: 13px; margin-bottom: 16px; padding: 12px 16px; background: rgba(59, 130, 246, 0.1); border-radius: 12px; border-left: 3px solid #3b82f6; display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:8px;">' +
+                '<span>✅ Ditemukan <b style="color:#60a5fa;">' + books.length + '</b> buku yang bisa dibaca langsung' +
+                (response.totalItems > books.length ? ' dari total <b>' + response.totalItems + '</b> hasil' : '') +
+                '</span>' +
+                '<span style="font-size:11px; color:rgba(255,255,255,0.5);">Sumber: ' + (response.source || 'Open Library') + '</span>' +
+                '</div>';
+            
+            var noteHtml = response.note ? 
+                '<div style="color: rgba(255,255,255,0.5); font-size: 11px; text-align: center; padding: 8px; margin-bottom: 12px;">' + 
+                response.note + '</div>' : '';
+            
+            var html = headerHtml + noteHtml + books.map(function(book) {
+                var safeTitle = escapeHtml(book.title);
+                var safeAuthor = escapeHtml(book.author);
+                var safeThumb = escapeHtml(book.thumbnail);
+                var safePreview = escapeHtml(book.previewLink);
+                var safeInfo = escapeHtml(book.infoLink);
+                
+                var coverHtml = safeThumb ? 
+                    '<img src="' + safeThumb + '" alt="' + safeTitle + '" onerror="this.src=\'https://via.placeholder.com/90x130/e2e8f0/64748b?text=No+Cover\'">' :
+                    '<div style="width:100%;height:100%;display:flex;align-items:center;justify-content:center;background:#e2e8f0;color:#64748b;font-size:11px;">No Cover</div>';
+                
+                return '<div class="google-book-card">' +
+                    '<div class="cover">' + coverHtml + '</div>' +
+                    '<div class="info">' +
+                        '<div class="title">' + safeTitle + '</div>' +
+                        '<div class="author">✍️ ' + safeAuthor + '</div>' +
+                        '<div class="meta">' +
+                            (book.year !== '-' ? '<span>📅 ' + book.year + '</span>' : '') +
+                            (book.pageCount > 0 ? '<span>📄 ' + book.pageCount + ' hal</span>' : '') +
+                            '<span style="color:#10b981;">✓ Bisa Dibaca</span>' +
+                        '</div>' +
+                        '<div class="description">' + escapeHtml(book.description) + '</div>' +
+                    '</div>' +
+                    '<div class="actions">' +
+                        '<button class="btn-preview" onclick="event.stopPropagation(); openBookReader(\'' + safePreview + '\')">📖 Baca</button>' +
+                        '<button class="btn-info" onclick="event.stopPropagation(); window.open(\'' + safeInfo + '\', \'_blank\')">ℹ️ Info</button>' +
+                    '</div>' +
+                '</div>';
+            }).join('');
+            container.innerHTML = html;
+        }
+
+        function openBookReader(embedUrl) {
+            if (!embedUrl || !embedUrl.includes('archive.org/embed')) {
+                showToast('File buku belum tersedia untuk dibaca online.', '❌');
+                return;
+            }
+            showToast('Membuka buku...', '📖');
+            var frame = document.getElementById('bookViewerFrame');
+            frame.src = embedUrl;
+            var modal = document.getElementById('bookViewerModal');
+            modal.style.display = 'block';
+            document.getElementById('driveDownloadBlocker').style.display = 'none';
+            isBookViewerOpen = true;
+            history.pushState({ modal: 'bookViewer' }, '');
+        }
+
+        // ============================================
+        // ESCAPE HTML
+        // ============================================
+        function escapeHtml(text) {
+            if (!text) return '';
+            var div = document.createElement('div');
+            div.textContent = text;
+            return div.innerHTML;
+        }
+
+        // ============================================
+        // SEARCH HANDLER
+        // ============================================
+        function handleSearchInput() {
+            var query = document.getElementById('searchInput').value.trim();
+            if (currentTab === 'google') {
+                clearTimeout(window._googleSearchTimeout);
+                window._googleSearchTimeout = setTimeout(function() {
+                    if (query.length >= 3) {
+                        searchGoogleBooks(query);
+                    }
+                }, 800);
+            } else {
+                searchBooks();
+            }
+        }
+
+        function clearSearch() {
+            document.getElementById('searchInput').value = '';
+            if (currentTab === 'google') {
+                document.getElementById('googleResults').innerHTML = 
+                    '<div class="google-status">📚 Masukkan judul atau nama penulis di kotak pencarian</div>';
+                document.getElementById('googleCount').textContent = '0';
+            } else {
+                displayBooks(allBooks);
+            }
+        }
+
+        document.addEventListener('DOMContentLoaded', function() {
+            var searchInput = document.getElementById('searchInput');
+            if (searchInput) {
+                searchInput.addEventListener('keydown', function(e) {
+                    if (e.key === 'Enter') {
+                        e.preventDefault();
+                        var query = this.value.trim();
+                        if (currentTab === 'google') {
+                            searchGoogleBooks(query);
+                        } else {
+                            searchBooks();
+                        }
+                    }
+                });
+            }
+        });
+
+        // ============================================
+        // LOAD BOOKS LOKAL
+        // ============================================
+        function loadBooks() {
+            if (isLoading) return;
+            isLoading = true;
+            var grid = document.getElementById('bookGrid');
+            grid.innerHTML = '<div class="book-loading"><div class="spinner"></div><span>Memuat koleksi buku...</span></div>';
+
+            callAPI('getBookCatalog', {})
+                .then(function(books) {
+                    isLoading = false;
+                    if (books && books.error) {
+                        grid.innerHTML = '<div class="book-empty"><svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M9.172 16.172a4 4 0 015.656 0M9 10h.01M15 10h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/></svg><h3>' + books.error + '</h3></div>';
+                        return;
+                    }
+                    if (!books || !Array.isArray(books) || books.length === 0) {
+                        grid.innerHTML = '<div class="book-empty"><svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M9.172 16.172a4 4 0 015.656 0M9 10h.01M15 10h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/></svg><h3>Tidak ada buku ditemukan</h3><p style="font-size: 14px; margin-top: 8px;">Folder kosong atau tidak ada file PDF</p></div>';
+                        return;
+                    }
+                    allBooks = books;
+                    displayBooks(allBooks);
+                    document.getElementById('localCount').textContent = books.length;
+                })
+                .catch(function(error) {
+                    isLoading = false;
+                    grid.innerHTML = '<div class="book-empty"><svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M9.172 16.172a4 4 0 015.656 0M9 10h.01M15 10h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/></svg><h3>Terjadi kesalahan</h3><p style="font-size: 14px; margin-top: 8px;">' + error.message + '</p></div>';
+                });
+        }
+
+        function displayBooks(books) {
+            var grid = document.getElementById('bookGrid');
+            var countEl = document.getElementById('bookCount');
+            if (!books || books.length === 0) {
+                grid.innerHTML = '<div class="book-empty" style="grid-column: 1/-1;"><svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M9.172 16.172a4 4 0 015.656 0M9 10h.01M15 10h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/></svg><h3>Tidak ada buku ditemukan</h3><p style="font-size: 14px; margin-top: 8px;">Silakan coba kata kunci lain</p></div>';
+                if (countEl) countEl.innerHTML = '<span class="badge-dot"></span><span>0 Buku</span>';
+                return;
+            }
+            if (countEl) countEl.innerHTML = '<span class="badge-dot"></span><span>' + books.length + ' Buku</span>';
+            grid.innerHTML = books.map(function(book) {
+                var thumbUrl = 'https://lh3.googleusercontent.com/d/' + book.id + '=w300-h400-p-k-no-nu';
+                var fallbackThumb = 'https://drive.google.com/thumbnail?id=' + book.id + '&sz=w400';
+                
+                return '<div class="book-card" onclick="openBook(\'' + book.id + '\')" title="Klik untuk membaca (Hanya Bisa Baca)">' +
+                    '<img src="' + thumbUrl + '" class="book-thumbnail" alt="' + escapeHtml(book.title) + '" loading="lazy" onerror="this.onerror=null;this.src=\'' + fallbackThumb + '\';">' +
+                    '<div class="book-title">' + escapeHtml(book.title) + '</div>' +
+                    '<div class="book-author">✍️ ' + escapeHtml(book.author) + '</div>' +
+                    '<div class="book-size">📄 ' + escapeHtml(book.size) + ' 🔒</div>' +
+                '</div>';
+            }).join('');
+        }
+
+        function searchBooks() {
+            var query = document.getElementById('searchInput').value.trim();
+            if (!query) { displayBooks(allBooks); return; }
+            var filtered = allBooks.filter(function(b) {
+                return b.title.toLowerCase().includes(query.toLowerCase()) || b.author.toLowerCase().includes(query.toLowerCase());
+            });
+            displayBooks(filtered);
+        }
+
+        // ============================================
+        // BOOK VIEWER
+        // ============================================
+        function openBook(fileId) {
+            var url = 'https://drive.google.com/file/d/' + fileId + '/preview';
+            var frame = document.getElementById('bookViewerFrame');
+            frame.src = url;
+            document.getElementById('bookViewerModal').style.display = 'block';
+            document.getElementById('driveDownloadBlocker').style.display = 'block';
+            isBookViewerOpen = true;
+            history.pushState({ modal: 'bookViewer' }, '');
+        }
+
+        function closeBookViewer() {
+            if (!isBookViewerOpen) return;
+            var frame = document.getElementById('bookViewerFrame');
+            frame.src = 'about:blank';
+            document.getElementById('bookViewerModal').style.display = 'none';
+            document.getElementById('driveDownloadBlocker').style.display = 'none';
+            isBookViewerOpen = false;
+            if (history.state && history.state.modal === 'bookViewer') {
+                history.back();
+            }
+        }
+
+        // ============================================
+        // POPSTATE HANDLER
+        // ============================================
+        window.addEventListener('popstate', function(e) {
+            if (e.state && e.state.modal === 'bookViewer') {
+                var modal = document.getElementById('bookViewerModal');
+                if (modal.style.display === 'block') {
+                    var frame = document.getElementById('bookViewerFrame');
+                    frame.src = 'about:blank';
+                    modal.style.display = 'none';
+                    document.getElementById('driveDownloadBlocker').style.display = 'none';
+                    isBookViewerOpen = false;
+                }
+            } else if (e.state && e.state.modal === 'aiPopup') {
+                var aiPopup = document.getElementById('aiPopup');
+                if (aiPopup.classList.contains('active')) {
+                    aiPopup.classList.remove('active');
+                    document.body.style.overflow = '';
+                    isAIPopupOpen = false;
+                }
+            } else if (e.state && e.state.modal === 'toolsPopup') {
+                var toolsPopup = document.getElementById('toolsPopup');
+                if (toolsPopup.classList.contains('active')) {
+                    toolsPopup.classList.remove('active');
+                    document.body.style.overflow = '';
+                    isToolsPopupOpen = false;
+                }
+            } else {
+                var modal = document.getElementById('bookViewerModal');
+                if (modal.style.display === 'block') {
+                    var frame = document.getElementById('bookViewerFrame');
+                    frame.src = 'about:blank';
+                    modal.style.display = 'none';
+                    document.getElementById('driveDownloadBlocker').style.display = 'none';
+                    isBookViewerOpen = false;
+                }
+                var aiPopup = document.getElementById('aiPopup');
+                if (aiPopup.classList.contains('active')) {
+                    aiPopup.classList.remove('active');
+                    document.body.style.overflow = '';
+                    isAIPopupOpen = false;
+                }
+                var toolsPopup = document.getElementById('toolsPopup');
+                if (toolsPopup.classList.contains('active')) {
+                    toolsPopup.classList.remove('active');
+                    document.body.style.overflow = '';
+                    isToolsPopupOpen = false;
+                }
+            }
+        });
+
+        // ============================================
+        // KEYBOARD SHORTCUTS
+        // ============================================
+        function preventKeyboardShortcuts(e) {
+            if (!isBookViewerOpen) return;
+            if ((e.ctrlKey || e.metaKey) && (e.key === 's' || e.key === 'S' || 
+                e.key === 'p' || e.key === 'P' || 
+                e.key === 'u' || e.key === 'U')) {
+                e.preventDefault();
+                showToast('Aksi download/print diblokir!', '🚫');
+                return false;
+            }
+            if (e.key === 'F12') {
+                e.preventDefault();
+                showToast('Dev Tools diblokir saat membaca!', '🚫');
+                return false;
+            }
+            if ((e.ctrlKey || e.metaKey) && e.shiftKey && (e.key === 'I' || e.key === 'i' || 
+                e.key === 'J' || e.key === 'j' || e.key === 'C' || e.key === 'c')) {
+                e.preventDefault();
+                showToast('Dev Tools diblokir saat membaca!', '🚫');
+                return false;
+            }
+        }
+
+        document.addEventListener('dragstart', function(e) { 
+            if (isBookViewerOpen && e.target.tagName !== 'TEXTAREA' && e.target.tagName !== 'INPUT') { 
+                e.preventDefault(); 
+                return false; 
+            } 
+        });
+
+        document.addEventListener('keydown', function(e) {
+            if (e.key === 'Escape') {
+                if (isBookViewerOpen) closeBookViewer();
+                if (isAIPopupOpen) closeAIChat();
+                if (isToolsPopupOpen) closeToolsPopup();
+            }
+        });
+
+        // ============================================
+        // INIT
+        // ============================================
+        window.onload = function() {
+            var urlParams = new URLSearchParams(window.location.search);
+            var urlToken = urlParams.get('token');
+            var action = urlParams.get('action');
+            
+            if (urlToken) {
+                setToken(urlToken);
+                var newUrl = window.location.href.split('?')[0];
+                window.history.replaceState({}, document.title, newUrl);
+            }
+            
+            if (action === 'logout') {
+                clearToken();
+                var newUrl = window.location.href.split('?')[0];
+                window.history.replaceState({}, document.title, newUrl);
+                window.location.reload();
+                return;
+            }
+
+            // Cek token di localStorage
+            var savedToken = getToken();
+            if (savedToken) {
+                // Verifikasi token dengan API
+                callAPI('getCurrentUser', { token: savedToken })
+                    .then(function(user) {
+                        if (user && user.username) {
+                            currentUser = user.fullName;
+                            isAdmin = (user.username === 'admin' || user.username === 'dosenstie');
+                            showMainPage();
+                        } else {
+                            clearToken();
+                            document.getElementById('pageLogin').style.display = 'flex';
+                        }
+                    })
+                    .catch(function() {
+                        clearToken();
+                        document.getElementById('pageLogin').style.display = 'flex';
+                    });
+            } else {
+                document.getElementById('pageLogin').style.display = 'flex';
+            }
+
+            document.addEventListener('keydown', preventKeyboardShortcuts);
+            history.replaceState({ modal: null }, '');
+        };
     </script>
-  </body>
+</body>
 </html>
