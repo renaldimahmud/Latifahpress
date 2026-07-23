@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Ruang Baca Digital - STIE LM</title>
+    <style>
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+      }
+      
+      html, body {
+        width: 100%;
+        height: 100%;
+        overflow: hidden;
+        background: #f0f4f8;
+      }
+      
+      iframe {
+        display: block;
+        width: 100vw;
+        height: 100vh;
+        border: none;
+        overflow: auto;
+      }
+      
+      .loading {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        height: 100vh;
+        font-family: Arial, sans-serif;
+        color: #0b4e96;
+        font-size: 18px;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="loading" id="loading">⏳ Memuat Ruang Baca Digital...</div>
+    
+    <iframe 
+      id="mainFrame"
+      src="https://script.google.com/macros/s/AKfycbwW-9mQmwlK1tmFULhhZ__EH_-hIPle4ljYrfUImzbmzIjDTSBWGyPPNYw26k7gnFwBpg/exec"
+      allow="fullscreen"
+    ></iframe>
+    
+    <script>
+      document.getElementById('mainFrame').addEventListener('load', function() {
+        document.getElementById('loading').style.display = 'none';
+      });
+      
+      setTimeout(function() {
+        document.getElementById('loading').style.display = 'none';
+      }, 3000);
+    </script>
+  </body>
+</html>
