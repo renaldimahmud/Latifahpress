@@ -122,19 +122,21 @@ function getToken() {
 
 function logout() {
     const token = getToken();
+    
+    // Redirect ke halaman logout
+    window.location.href = 'logout.html';
+    
+    // Proses logout di background
     if (token) {
         callAPI('logout', { token: token })
             .then(() => {
                 localStorage.removeItem('sessionToken');
-                window.location.href = 'login.html';
             })
             .catch(() => {
                 localStorage.removeItem('sessionToken');
-                window.location.href = 'login.html';
             });
     } else {
         localStorage.removeItem('sessionToken');
-        window.location.href = 'login.html';
     }
 }
 
