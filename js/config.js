@@ -3,8 +3,8 @@
 // =============================================
 
 const CONFIG = {
-    // Ganti dengan URL Web App Anda setelah deploy
-    API_URL: 'https://script.google.com/macros/s/YOUR_DEPLOYMENT_ID/exec'
+    // URL Web App Google Apps Script
+    API_URL: 'https://script.google.com/macros/s/AKfycbwW-9mQmwlK1tmFULhhZ__EH_-hIPle4ljYrfUImzbmzIjDTSBWGyPPNYw26k7gnFwBpg/exec'
 };
 
 // =============================================
@@ -14,13 +14,13 @@ const CONFIG = {
 function callAPI(action, params = {}, method = 'GET') {
     const token = localStorage.getItem('sessionToken');
     const url = new URL(CONFIG.API_URL);
-    
+
     // Tambahkan parameter dasar
     url.searchParams.append('action', action);
     if (token) {
         url.searchParams.append('token', token);
     }
-    
+
     // Tambahkan parameter untuk GET
     if (method === 'GET') {
         Object.keys(params).forEach(key => {
@@ -29,19 +29,19 @@ function callAPI(action, params = {}, method = 'GET') {
             }
         });
     }
-    
+
     const options = {
         method: method,
         headers: {
             'Content-Type': 'application/json'
         }
     };
-    
+
     // Tambahkan body untuk POST
     if (method === 'POST') {
         options.body = JSON.stringify(params);
     }
-    
+
     return fetch(url.toString(), options)
         .then(response => response.json())
         .then(data => {
@@ -86,18 +86,18 @@ function showToast(message, icon = '📢', duration = 2500) {
         `;
         document.body.appendChild(toast);
     }
-    
+
     toast.innerHTML = `<span>${icon}</span><span>${message}</span>`;
     toast.style.display = 'flex';
     toast.style.opacity = '0';
     toast.style.transform = 'translateX(-50%) translateY(20px)';
-    
+
     // Trigger animation
     requestAnimationFrame(() => {
         toast.style.opacity = '1';
         toast.style.transform = 'translateX(-50%) translateY(0)';
     });
-    
+
     clearTimeout(toast._hideTimeout);
     toast._hideTimeout = setTimeout(() => {
         toast.style.opacity = '0';
@@ -202,11 +202,11 @@ function escapeHtml(text) {
 document.addEventListener('DOMContentLoaded', function() {
     // Cek token di URL saat load
     getToken();
-    
+
     // Jika di halaman yang memerlukan login dan tidak login, redirect
     const publicPages = ['login.html', '404.html'];
     const currentPage = window.location.pathname.split('/').pop() || 'index.html';
-    
+
     if (!publicPages.includes(currentPage) && !isLoggedIn()) {
         // Simpan halaman tujuan untuk redirect setelah login
         localStorage.setItem('redirectAfterLogin', window.location.href);
