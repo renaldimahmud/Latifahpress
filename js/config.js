@@ -3,61 +3,55 @@
 // =============================================
 
 const CONFIG = {
-    // URL Web App Google Apps Script
+    // ⚠️ GANTI DENGAN URL WEB APP ANDA
     API_URL: 'https://script.google.com/macros/s/AKfycbwW-9mQmwlK1tmFULhhZ__EH_-hIPle4ljYrfUImzbmzIjDTSBWGyPPNYw26k7gnFwBpg/exec'
 };
 
 // =============================================
-// HELPER: Call API
+// HELPER: Call API (Semua pakai GET - CORS Friendly)
 // =============================================
 
-function callAPI(action, params = {}, method = 'GET') {
+function callAPI(action, params = {}) {
     const token = localStorage.getItem('sessionToken');
     const url = new URL(CONFIG.API_URL);
 
-    // Tambahkan parameter dasar
+    // Parameter dasar: action & token
     url.searchParams.append('action', action);
     if (token) {
         url.searchParams.append('token', token);
     }
 
-    // Tambahkan parameter untuk GET
-    if (method === 'GET') {
-        Object.keys(params).forEach(key => {
-            if (params[key] !== undefined && params[key] !== null && params[key] !== '') {
-                url.searchParams.append(key, params[key]);
-            }
-        });
-    }
-
-    const options = {
-        method: method,
-        headers: {
-            'Content-Type': 'application/json'
+    // Tambahkan semua parameter ke URL (method GET)
+    Object.keys(params).forEach(key => {
+        if (params[key] !== undefined && params[key] !== null && params[key] !== '') {
+            url.searchParams.append(key, params[key]);
         }
-    };
+    });
 
-    // Tambahkan body untuk POST
-    if (method === 'POST') {
-        options.body = JSON.stringify(params);
-    }
-
-    return fetch(url.toString(), options)
-        .then(response => response.json())
-        .then(data => {
-            if (data.error) {
-                throw new Error(data.error);
-            }
-            return data;
-        });
+    // 🔥 KUNCI: Hanya pakai GET, tanpa header, tanpa body
+    // Ini menghindari Preflight Request (OPTIONS) yang diblokir CORS
+    return fetch(url.toString(), {
+        method: 'GET'
+    })
+    .then(response => {
+        if (!response.ok) {
+            throw new Error('Network response was not ok: ' + response.status);
+        }
+        return response.json();
+    })
+    .then(data => {
+        if (data.error) {
+            throw new Error(data.error);
+        }
+        return data;
+    });
 }
 
 // =============================================
 // HELPER: Toast Notifikasi
 // =============================================
 
-function showToast(message, icon = '📢', duration = 2500) {
-    // Cek apakah toast container sudah ada
+function showToast(message, icon = '📢', duration = 3000) {
     let toast = document.getElementById('globalToast');
     if (!toast) {
         toast = document.createElement('div');
@@ -92,7 +86,6 @@ function showToast(message, icon = '📢', duration = 2500) {
     toast.style.opacity = '0';
     toast.style.transform = 'translateX(-50%) translateY(20px)';
 
-    // Trigger animation
     requestAnimationFrame(() => {
         toast.style.opacity = '1';
         toast.style.transform = 'translateX(-50%) translateY(0)';
@@ -114,14 +107,12 @@ function showToast(message, icon = '📢', duration = 2500) {
 
 function getToken() {
     let token = localStorage.getItem('sessionToken');
-    // Cek juga di URL parameter (untuk redirect setelah login)
     if (!token) {
         const urlParams = new URLSearchParams(window.location.search);
         const urlToken = urlParams.get('token');
         if (urlToken) {
             token = urlToken;
             localStorage.setItem('sessionToken', token);
-            // Hapus token dari URL
             const newUrl = window.location.href.split('?')[0];
             window.history.replaceState({}, document.title, newUrl);
         }
@@ -200,15 +191,11 @@ function escapeHtml(text) {
 // =============================================
 
 document.addEventListener('DOMContentLoaded', function() {
-    // Cek token di URL saat load
     getToken();
-
-    // Jika di halaman yang memerlukan login dan tidak login, redirect
     const publicPages = ['login.html', '404.html'];
     const currentPage = window.location.pathname.split('/').pop() || 'index.html';
 
     if (!publicPages.includes(currentPage) && !isLoggedIn()) {
-        // Simpan halaman tujuan untuk redirect setelah login
         localStorage.setItem('redirectAfterLogin', window.location.href);
         window.location.href = 'login.html';
     }
@@ -218,6 +205,7 @@ document.addEventListener('DOMContentLoaded', function() {
 // EXPOSE FUNCTIONS KE GLOBAL SCOPE
 // =============================================
 
+window.CONFIG = CONFIG;
 window.callAPI = callAPI;
 window.showToast = showToast;
 window.getToken = getToken;
