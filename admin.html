@@ -1,306 +1,74 @@
 <!DOCTYPE html>
-<html>
+<html lang="id">
 <head>
-    <base target="_top">
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Kelola User - Perpustakaan STIE LM</title>
-    <style>
-        * { margin: 0; padding: 0; box-sizing: border-box; }
-        body {
-            font-family: Arial, sans-serif;
-            background: #f0f4f8;
-            min-height: 100vh;
-        }
-        .header-gradient {
-            background: linear-gradient(135deg, #0f172a 0%, #1e3a5f 50%, #2d4a7a 100%);
-            color: white;
-            padding: 18px 24px;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            flex-wrap: wrap;
-            gap: 10px;
-        }
-        .header-gradient h1 { font-size: 18px; font-weight: 800; }
-        .header-gradient .nav-btn {
-            background: rgba(255,255,255,0.15);
-            border: 1px solid rgba(255,255,255,0.2);
-            color: white;
-            padding: 6px 16px;
-            border-radius: 20px;
-            font-size: 12px;
-            font-weight: 700;
-            cursor: pointer;
-            margin-left: 8px;
-        }
-        .container { max-width: 800px; margin: 24px auto; padding: 0 16px; }
-        .card {
-            background: white;
-            border-radius: 16px;
-            box-shadow: 0 2px 10px rgba(0,0,0,0.06);
-            padding: 24px;
-            margin-bottom: 20px;
-        }
-        .card h2 { font-size: 16px; color: #0f172a; margin-bottom: 16px; }
-        .form-row {
-            display: flex;
-            gap: 10px;
-            flex-wrap: wrap;
-            margin-bottom: 12px;
-        }
-        .form-row input {
-            flex: 1;
-            min-width: 140px;
-            padding: 10px 14px;
-            border: 2px solid #e2e8f0;
-            border-radius: 10px;
-            font-size: 14px;
-        }
-        .form-row input:focus { outline: none; border-color: #3b82f6; }
-        .btn {
-            padding: 10px 22px;
-            border-radius: 10px;
-            border: none;
-            font-weight: 700;
-            font-size: 13px;
-            cursor: pointer;
-        }
-        .btn-primary { background: #0f172a; color: white; }
-        .btn-primary:hover { background: #1e293b; }
-        .btn-cancel { background: #f1f5f9; color: #475569; }
-        .btn-cancel:hover { background: #e2e8f0; }
-        .btn-edit { background: #dbeafe; color: #2563eb; }
-        .btn-delete { background: #fee2e2; color: #dc2626; }
-        .btn-small { padding: 5px 12px; font-size: 11px; border-radius: 8px; }
-        table { width: 100%; border-collapse: collapse; }
-        th, td {
-            text-align: left;
-            padding: 10px 8px;
-            font-size: 13px;
-            border-bottom: 1px solid #f1f5f9;
-        }
-        th { color: #64748b; font-weight: 700; font-size: 11px; text-transform: uppercase; }
-        td.actions { display: flex; gap: 6px; flex-wrap: wrap; }
-        .empty-msg, .loading-msg { text-align: center; color: #94a3b8; padding: 30px; font-size: 13px; }
-        .toast {
-            position: fixed;
-            bottom: 30px;
-            left: 50%;
-            transform: translateX(-50%);
-            background: rgba(15, 23, 42, 0.92);
-            color: white;
-            padding: 12px 24px;
-            border-radius: 16px;
-            font-weight: 600;
-            font-size: 13px;
-            z-index: 9999;
-            display: none;
-        }
-        .toast.show { display: block; }
-    </style>
+
+    <!-- ===== FONTS & LIBRARIES ===== -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+
+    <!-- ===== CSS UTAMA ===== -->
+    <link rel="stylesheet" href="css/styles-admin.css">
+
+    <!-- ===== FAVICON ===== -->
+    <link rel="icon" type="image/x-icon" href="assets/favicon.ico">
 </head>
 <body>
 
-<div class="header-gradient">
-    <h1>⚙️ Kelola User</h1>
-    <div>
-        <button class="nav-btn" onclick="window.top.location.href = getUrlWithToken(SCRIPT_URL)">← Kembali</button>
-    </div>
-</div>
-
-<div class="container">
-    <div class="card">
-        <h2 id="formTitle">➕ Tambah User Baru</h2>
-        <input type="hidden" id="editRow" value="">
-        <div class="form-row">
-            <input type="text" id="fUsername" placeholder="Username">
-            <input type="text" id="fPassword" placeholder="Password">
-            <input type="text" id="fNama" placeholder="Nama Lengkap">
-        </div>
-        <button class="btn btn-primary" id="btnSubmit" onclick="submitForm()">Tambah User</button>
-        <button class="btn btn-cancel" id="btnCancel" onclick="cancelEdit()" style="display:none;">Batal</button>
-    </div>
-
-    <div class="card">
-        <h2>📋 Daftar User</h2>
-        <div id="tableWrap">
-            <div class="loading-msg">Memuat data user...</div>
+    <!-- ============================================================
+    HEADER
+    ============================================================ -->
+    <div class="header-gradient">
+        <h1>⚙️ Kelola User</h1>
+        <div>
+            <button class="nav-btn" onclick="window.location.href='index.html'">← Kembali</button>
         </div>
     </div>
-</div>
 
-<div id="toast" class="toast"></div>
+    <!-- ============================================================
+    MAIN CONTENT
+    ============================================================ -->
+    <div class="container">
 
-<script>
-// =========================================================
-// SESSION TOKEN MANAGEMENT
-// =========================================================
-var SCRIPT_URL = "<?= scriptUrl ?>";
-var SESSION_TOKEN = "<?= token ?>";
+        <!-- FORM TAMBAH/EDIT USER -->
+        <div class="card">
+            <h2 id="formTitle">➕ Tambah User Baru</h2>
+            <input type="hidden" id="editRow" value="">
 
-function getToken() {
-    var token = localStorage.getItem('sessionToken');
-    if (!token && SESSION_TOKEN) {
-        token = SESSION_TOKEN;
-        localStorage.setItem('sessionToken', token);
-    }
-    return token;
-}
+            <div class="form-row">
+                <input type="text" id="fUsername" placeholder="Username" autocomplete="off">
+                <input type="text" id="fPassword" placeholder="Password" autocomplete="off">
+                <input type="text" id="fNama" placeholder="Nama Lengkap" autocomplete="off">
+            </div>
 
-function getUrlWithToken(baseUrl) {
-    var token = getToken();
-    if (token) {
-        var separator = baseUrl.indexOf('?') > -1 ? '&' : '?';
-        return baseUrl + separator + 'token=' + encodeURIComponent(token);
-    }
-    return baseUrl;
-}
+            <div style="display: flex; gap: 10px; flex-wrap: wrap;">
+                <button class="btn btn-primary" id="btnSubmit" onclick="submitForm()">Tambah User</button>
+                <button class="btn btn-cancel" id="btnCancel" onclick="cancelEdit()" style="display:none;">Batal</button>
+            </div>
+        </div>
 
-function showToast(msg) {
-    var t = document.getElementById('toast');
-    t.textContent = msg;
-    t.classList.add('show');
-    setTimeout(function() { t.classList.remove('show'); }, 2500);
-}
+        <!-- DAFTAR USER -->
+        <div class="card">
+            <h2>📋 Daftar User</h2>
+            <div id="tableWrap">
+                <div class="loading-msg">Memuat data user...</div>
+            </div>
+        </div>
+    </div>
 
-var userData = [];
+    <!-- ============================================================
+    TOAST NOTIFICATION
+    ============================================================ -->
+    <div id="toast" class="toast"></div>
 
-function loadUsers() {
-    document.getElementById('tableWrap').innerHTML = '<div class="loading-msg">Memuat data user...</div>';
-    google.script.run
-        .withSuccessHandler(function(users) {
-            userData = users || [];
-            renderTable();
-        })
-        .withFailureHandler(function(err) {
-            document.getElementById('tableWrap').innerHTML =
-                '<div class="empty-msg">Gagal memuat: ' + err.message + '</div>';
-        })
-        .getUserList(getToken());
-}
-
-function renderTable() {
-    var wrap = document.getElementById('tableWrap');
-    if (!userData.length) {
-        wrap.innerHTML = '<div class="empty-msg">Belum ada user.</div>';
-        return;
-    }
-    var html = '<table><tr><th>Username</th><th>Password</th><th>Nama</th><th>Aksi</th></tr>';
-    userData.forEach(function(u) {
-        html += '<tr>' +
-            '<td>' + u.username + '</td>' +
-            '<td>' + u.password + '</td>' +
-            '<td>' + u.nama + '</td>' +
-            '<td class="actions">' +
-                '<button class="btn btn-edit btn-small" onclick="editUser(' + u.row + ')">Edit</button>' +
-                '<button class="btn btn-delete btn-small" onclick="removeUser(' + u.row + ', \'' + u.username + '\')">Hapus</button>' +
-            '</td>' +
-        '</tr>';
-    });
-    html += '</table>';
-    wrap.innerHTML = html;
-}
-
-function editUser(row) {
-    var u = userData.find(function(x) { return x.row === row; });
-    if (!u) return;
-    document.getElementById('editRow').value = u.row;
-    document.getElementById('fUsername').value = u.username;
-    document.getElementById('fPassword').value = u.password;
-    document.getElementById('fNama').value = u.nama;
-    document.getElementById('formTitle').textContent = '✏️ Edit User: ' + u.username;
-    document.getElementById('btnSubmit').textContent = 'Update User';
-    document.getElementById('btnCancel').style.display = 'inline-block';
-    window.scrollTo({ top: 0, behavior: 'smooth' });
-}
-
-function cancelEdit() {
-    document.getElementById('editRow').value = '';
-    document.getElementById('fUsername').value = '';
-    document.getElementById('fPassword').value = '';
-    document.getElementById('fNama').value = '';
-    document.getElementById('formTitle').textContent = '➕ Tambah User Baru';
-    document.getElementById('btnSubmit').textContent = 'Tambah User';
-    document.getElementById('btnCancel').style.display = 'none';
-}
-
-function submitForm() {
-    var row = document.getElementById('editRow').value;
-    var username = document.getElementById('fUsername').value.trim();
-    var password = document.getElementById('fPassword').value.trim();
-    var nama = document.getElementById('fNama').value.trim();
-
-    if (!username || !password) {
-        showToast('Username dan password harus diisi!');
-        return;
-    }
-
-    var btn = document.getElementById('btnSubmit');
-    btn.disabled = true;
-    btn.textContent = 'Memproses...';
-
-    if (row) {
-        google.script.run
-            .withSuccessHandler(function(res) {
-                btn.disabled = false;
-                btn.textContent = 'Update User';
-                showToast(res.message);
-                if (res.success) { cancelEdit(); loadUsers(); }
-            })
-            .withFailureHandler(function(err) {
-                btn.disabled = false;
-                btn.textContent = 'Update User';
-                showToast('Error: ' + err.message);
-            })
-            .updateUser(getToken(), parseInt(row), username, password, nama);
-    } else {
-        google.script.run
-            .withSuccessHandler(function(res) {
-                btn.disabled = false;
-                btn.textContent = 'Tambah User';
-                showToast(res.message);
-                if (res.success) { cancelEdit(); loadUsers(); }
-            })
-            .withFailureHandler(function(err) {
-                btn.disabled = false;
-                btn.textContent = 'Tambah User';
-                showToast('Error: ' + err.message);
-            })
-            .addUser(getToken(), username, password, nama);
-    }
-}
-
-function removeUser(row, username) {
-    if (!confirm('Hapus user "' + username + '"?')) return;
-    google.script.run
-        .withSuccessHandler(function(res) {
-            showToast(res.message);
-            if (res.success) loadUsers();
-        })
-        .withFailureHandler(function(err) {
-            showToast('Error: ' + err.message);
-        })
-        .deleteUser(getToken(), row, username);
-}
-
-// PERBAIKAN: pakai window.location (bukan window.top.location)
-window.onload = function() {
-    var urlParams = new URLSearchParams(window.location.search);
-    var urlToken = urlParams.get('token');
-    if (urlToken) {
-        localStorage.setItem('sessionToken', urlToken);
-        var newUrl = window.location.href.split('?')[0];
-        window.history.replaceState({}, document.title, newUrl);
-    }
-
-    if (SESSION_TOKEN && !localStorage.getItem('sessionToken')) {
-        localStorage.setItem('sessionToken', SESSION_TOKEN);
-    }
-
-    loadUsers();
-};
-</script>
+    <!-- ============================================================
+    JAVASCRIPT (LOAD DI AKHIR)
+    ============================================================ -->
+    <script src="js/config.js"></script>
+    <script src="js/admin.js"></script>
 
 </body>
 </html>
