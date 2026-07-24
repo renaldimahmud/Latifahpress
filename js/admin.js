@@ -1,15 +1,19 @@
 // =============================================
-// ADMIN.JS - FUNGSI KELOLA USER
+// ADMIN.JS - FUNGSI KELOLA USER (PAKAI FETCH)
 // =============================================
 
 var userData = [];
+
+// =============================================
+// 1. LOAD USERS
+// =============================================
 
 function loadUsers() {
     var wrap = document.getElementById('tableWrap');
     if (wrap) {
         wrap.innerHTML = '<div class="loading-msg">Memuat data user...</div>';
     }
-    
+
     callAPI('getUserList', {}, 'GET')
         .then(function(users) {
             userData = users || [];
@@ -23,25 +27,62 @@ function loadUsers() {
         });
 }
 
+// =============================================
+// 2. RENDER TABLE
+// =============================================
+
 function renderTable() {
     var wrap = document.getElementById('tableWrap');
     if (!wrap) return;
-    
+
     if (!userData || userData.length === 0) {
         wrap.innerHTML = '<div class="empty-msg">📭 Belum ada user terdaftar.</div>';
         return;
     }
-    
-    var html = '<div class="table-responsive"><table><thead><tr><th>Username</th><th>Password</th><th>Nama</th><th>Aksi</th></tr></thead><tbody>';
-    
+
+    var html = `
+        <div class="table-responsive">
+            <table>
+                <thead>
+                    <tr>
+                        <th>Username</th>
+                        <th>Password</th>
+                        <th>Nama</th>
+                        <th>Aksi</th>
+                    </tr>
+                </thead>
+                <tbody>
+    `;
+
     userData.forEach(function(u) {
+        // Sembunyikan password admin untuk keamanan
         var displayPassword = u.username === 'admin' ? '••••••••' : u.password;
-        html += '<tr><td><strong>' + escapeHtml(u.username) + '</strong></td><td>' + escapeHtml(displayPassword) + '</td><td>' + escapeHtml(u.nama) + '</td><td class="actions"><button class="btn btn-edit btn-small" onclick="editUser(' + u.row + ')">✏️ Edit</button><button class="btn btn-delete btn-small" onclick="removeUser(' + u.row + ', \'' + escapeHtml(u.username) + '\')">🗑️ Hapus</button></td></tr>';
+
+        html += `
+            <tr>
+                <td><strong>${escapeHtml(u.username)}</strong></td>
+                <td>${escapeHtml(displayPassword)}</td>
+                <td>${escapeHtml(u.nama)}</td>
+                <td class="actions">
+                    <button class="btn btn-edit btn-small" onclick="editUser(${u.row})">✏️ Edit</button>
+                    <button class="btn btn-delete btn-small" onclick="removeUser(${u.row}, '${escapeHtml(u.username)}')">🗑️ Hapus</button>
+                </td>
+            </tr>
+        `;
     });
-    
-    html += '</tbody></table></div>';
+
+    html += `
+                </tbody>
+            </table>
+        </div>
+    `;
+
     wrap.innerHTML = html;
 }
+
+// =============================================
+// 3. EDIT USER
+// =============================================
 
 function editUser(row) {
     var u = userData.find(function(x) { return x.row === row; });
@@ -49,68 +90,93 @@ function editUser(row) {
         showToast('User tidak ditemukan!', '❌');
         return;
     }
-    
+
     document.getElementById('editRow').value = u.row;
     document.getElementById('fUsername').value = u.username;
     document.getElementById('fPassword').value = u.password;
     document.getElementById('fNama').value = u.nama;
-    
+
     document.getElementById('formTitle').textContent = '✏️ Edit User: ' + u.username;
     document.getElementById('btnSubmit').textContent = 'Update User';
     document.getElementById('btnCancel').style.display = 'inline-block';
-    
+
+    // Scroll ke form
     document.querySelector('.card:first-child').scrollIntoView({ behavior: 'smooth' });
+
+    // Fokus ke username
     setTimeout(function() {
         document.getElementById('fUsername').focus();
     }, 300);
 }
+
+// =============================================
+// 4. CANCEL EDIT
+// =============================================
 
 function cancelEdit() {
     document.getElementById('editRow').value = '';
     document.getElementById('fUsername').value = '';
     document.getElementById('fPassword').value = '';
     document.getElementById('fNama').value = '';
-    
+
     document.getElementById('formTitle').textContent = '➕ Tambah User Baru';
     document.getElementById('btnSubmit').textContent = 'Tambah User';
     document.getElementById('btnCancel').style.display = 'none';
-    
+
     setTimeout(function() {
         document.getElementById('fUsername').focus();
     }, 100);
 }
+
+// =============================================
+// 5. SUBMIT FORM (ADD / UPDATE)
+// =============================================
 
 function submitForm() {
     var row = document.getElementById('editRow').value;
     var username = document.getElementById('fUsername').value.trim();
     var password = document.getElementById('fPassword').value.trim();
     var nama = document.getElementById('fNama').value.trim() || 'Pengguna';
-    
+
     if (!username || !password) {
         showToast('Username dan password harus diisi!', '⚠️');
         document.getElementById('fUsername').focus();
         return;
     }
-    
+
     var btn = document.getElementById('btnSubmit');
     var originalText = btn.textContent;
     btn.disabled = true;
     btn.textContent = '⏳ Memproses...';
-    
+
     var action, params;
+
     if (row) {
+        // UPDATE
         action = 'updateUser';
-        params = { rowNumber: parseInt(row), username: username, password: password, nama: nama };
+        params = {
+            rowNumber: parseInt(row),
+            username: username,
+            password: password,
+            nama: nama
+        };
     } else {
+        // ADD
         action = 'addUser';
-        params = { username: username, password: password, nama: nama };
+        params = {
+            username: username,
+            password: password,
+            nama: nama
+        };
     }
-    
-    callAPI(action, params, 'POST')
+
+    callAPI(action, params, 'GET')
         .then(function(result) {
             btn.disabled = false;
             btn.textContent = originalText;
+
             showToast(result.message, result.success ? '✅' : '❌');
+
             if (result.success) {
                 cancelEdit();
                 loadUsers();
@@ -123,17 +189,26 @@ function submitForm() {
         });
 }
 
+// =============================================
+// 6. DELETE USER
+// =============================================
+
 function removeUser(row, username) {
     if (username === 'admin') {
         showToast('Akun admin tidak bisa dihapus!', '🚫');
         return;
     }
+
     if (!confirm('⚠️ Hapus user "' + username + '" ?\nTindakan ini tidak bisa dibatalkan!')) {
         return;
     }
-    
+
     showToast('Menghapus user...', '⏳');
-    callAPI('deleteUser', { rowNumber: row, username: username }, 'POST')
+
+    callAPI('deleteUser', {
+        rowNumber: row,
+        username: username
+    }, 'GET')
         .then(function(result) {
             showToast(result.message, result.success ? '✅' : '❌');
             if (result.success) {
@@ -145,19 +220,32 @@ function removeUser(row, username) {
         });
 }
 
+// =============================================
+// 7. SHOW TOAST (Override dari config.js)
+// =============================================
+
 function showToast(message, icon) {
     var toast = document.getElementById('toast');
     if (!toast) return;
+
     toast.innerHTML = (icon || '📢') + ' ' + message;
     toast.className = 'toast show';
+
     clearTimeout(toast._timeout);
     toast._timeout = setTimeout(function() {
         toast.className = 'toast';
     }, 3000);
 }
 
+// =============================================
+// 8. INISIALISASI
+// =============================================
+
 document.addEventListener('DOMContentLoaded', function() {
+    // Cek token di URL
     getToken();
+
+    // Cek akses admin
     var token = getToken();
     if (token) {
         callAPI('checkAdmin', {}, 'GET')
@@ -178,7 +266,11 @@ document.addEventListener('DOMContentLoaded', function() {
     } else {
         window.location.href = 'login.html';
     }
+
+    // Load users
     loadUsers();
+
+    // Event listener untuk Enter key
     document.addEventListener('keydown', function(e) {
         if (e.key === 'Enter') {
             var target = e.target;
@@ -189,6 +281,10 @@ document.addEventListener('DOMContentLoaded', function() {
         }
     });
 });
+
+// =============================================
+// EXPOSE FUNCTIONS KE GLOBAL SCOPE
+// =============================================
 
 window.loadUsers = loadUsers;
 window.renderTable = renderTable;
